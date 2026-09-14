@@ -1,0 +1,246 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>GCWBB &ndash; GC Winterberg Birdie Book</title>
+<meta name="description" content="Digitales Birdie Book für den 9-Loch-Turnierplatz des GC Winterberg: Löcher, Schläger, Scorecard.">
+<meta name="theme-color" content="#f7f4ee">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/favicon-32.png" sizes="32x32">
+<link rel="icon" href="icons/favicon-16.png" sizes="16x16">
+<link rel="apple-touch-icon" href="icons/apple-touch-icon.png">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600;700&family=Manrope:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+<div id="app">
+
+  <!-- ========== START ========== -->
+  <section id="screen-start" class="screen active">
+    <svg class="start-hero-bg" width="100%" height="280" viewBox="0 0 390 280" preserveAspectRatio="none">
+      <path d="M -20 280 C 60 170, 120 240, 195 175 C 270 110, 320 175, 410 85 L 410 -20 L -20 -20 Z" fill="oklch(93% 0.03 150)"/>
+      <path d="M -20 280 C 70 195, 130 250, 200 195 C 275 135, 330 190, 410 120 L 410 -20 L -20 -20 Z" fill="oklch(89% 0.045 150)" opacity="0.6"/>
+    </svg>
+    <div class="start-logo-wrap"><img src="assets/logo.png" alt="GC Winterberg Logo"></div>
+    <div class="start-title">
+      <div class="eyebrow">Golf Club Winterberg</div>
+      <h1>Birdie Book</h1>
+      <div class="start-sub" data-i18n="heroSub">Deine Runde auf dem 9-Loch-Platz</div>
+    </div>
+    <div class="start-actions">
+      <button class="btn btn-primary" id="btn-new-round">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="4"/><path d="M12 5c2 0 3 1 6 1v7c-3 0-4-1-6-1"/></svg>
+        <span data-i18n="newRound">Neue Runde</span>
+      </button>
+      <button class="btn btn-outline" id="btn-existing-rounds">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 5h16M4 12h16M4 19h10"/></svg>
+        <span data-i18n="existingRounds">Bestehende Runden</span>
+      </button>
+    </div>
+    <div class="credit" style="position:absolute;bottom:10px;left:0;right:0;" data-i18n="madeWith">made with &#9825; in Winterberg</div>
+  </section>
+
+  <!-- ========== BESTEHENDE RUNDEN ========== -->
+  <section id="screen-rounds" class="screen">
+    <div class="topbar">
+      <button class="icon-btn" data-back="screen-start" aria-label="Zurück">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg>
+      </button>
+      <div class="title-block"><div class="club" data-i18n="roundsTitle">Bestehende Runden</div></div>
+    </div>
+    <div class="list" id="rounds-list"></div>
+  </section>
+
+  <!-- ========== HAUPTBILDSCHIRM / LOCH ========== -->
+  <section id="screen-main" class="screen">
+    <div class="topbar">
+      <div class="logo-sm"><img src="assets/logo.png" alt="Logo"></div>
+      <div class="title-block">
+        <div class="club">GC Winterberg</div>
+        <div class="context" id="main-context">&ndash;</div>
+      </div>
+      <button class="icon-btn" id="btn-new-round-2" aria-label="Neue Runde">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="20" x2="12" y2="4"/><path d="M12 5c2 0 3 1 6 1v7c-3 0-4-1-6-1"/></svg>
+      </button>
+    </div>
+
+    <div class="hole-body">
+      <div class="hole-col" id="col-front"></div>
+
+      <div class="hole-card">
+        <div class="hole-card-head">
+          <div>
+            <div class="hole-num-label" data-i18n="hole">Loch</div>
+            <div class="hole-num" id="hole-num">&ndash;</div>
+          </div>
+          <div class="hole-meta">
+            <div><span data-i18n="par">Par</span> <strong id="hole-par">&ndash;</strong></div>
+            <div><span data-i18n="hcp">HCP</span> <strong id="hole-hcp">&ndash;</strong></div>
+          </div>
+        </div>
+        <div class="hole-sketch" id="hole-sketch"></div>
+        <div class="hole-desc" id="hole-desc"></div>
+        <div class="tee-row">
+          <div class="tee-chip herren">
+            <div class="tee-label" data-i18n="herren">Herren</div>
+            <div class="tee-val" id="tee-herren">&ndash;</div>
+          </div>
+          <div class="tee-chip damen">
+            <div class="tee-label" data-i18n="damen">Damen</div>
+            <div class="tee-val" id="tee-damen">&ndash;</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="hole-col" id="col-back"></div>
+    </div>
+
+    <nav class="footer-nav">
+      <div class="nav-row">
+        <button class="nav-item" data-nav="screen-main"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="21" x2="6" y2="4"/><path d="M6 5c2.2 0 3.4 1.1 6.5 1.1S16 5 18 5v7c-2 0-3.3 1.1-5.5 1.1S6 12 6 12"/></svg><span class="label" data-i18n="navHoles">Löcher</span></button>
+        <button class="nav-item" data-nav="screen-clubs"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="19" y2="5"/><path d="M14 5l5 5"/></svg><span class="label" data-i18n="navClubs">Schläger</span></button>
+        <button class="nav-item" data-nav="screen-scorecard"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg><span class="label" data-i18n="navScorecard">Scorecard</span></button>
+        <button class="nav-item" data-nav="screen-more"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg><span class="label" data-i18n="navMore">Sonstiges</span></button>
+      </div>
+      <div class="credit" data-i18n="madeWith">made with &#9825; in Winterberg</div>
+    </nav>
+  </section>
+
+  <!-- ========== SCHLÄGER ========== -->
+  <section id="screen-clubs" class="screen">
+    <div class="page-head">
+      <div class="eyebrow" data-i18n="clubsSub">Standardsatz</div>
+      <h1 data-i18n="clubsTitle">Schläger</h1>
+    </div>
+    <div class="list" id="clubs-list"></div>
+    <nav class="footer-nav">
+      <div class="nav-row">
+        <button class="nav-item" data-nav="screen-main"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="21" x2="6" y2="4"/><path d="M6 5c2.2 0 3.4 1.1 6.5 1.1S16 5 18 5v7c-2 0-3.3 1.1-5.5 1.1S6 12 6 12"/></svg><span class="label" data-i18n="navHoles">Löcher</span></button>
+        <button class="nav-item active" data-nav="screen-clubs"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="19" y2="5"/><path d="M14 5l5 5"/></svg><span class="label" data-i18n="navClubs">Schläger</span></button>
+        <button class="nav-item" data-nav="screen-scorecard"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg><span class="label" data-i18n="navScorecard">Scorecard</span></button>
+        <button class="nav-item" data-nav="screen-more"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg><span class="label" data-i18n="navMore">Sonstiges</span></button>
+      </div>
+      <div class="credit" data-i18n="madeWith">made with &#9825; in Winterberg</div>
+    </nav>
+  </section>
+
+  <!-- ========== SCORECARD ========== -->
+  <section id="screen-scorecard" class="screen">
+    <div class="page-head">
+      <div class="eyebrow" id="scorecard-date">&ndash;</div>
+      <h1 data-i18n="scorecardTitle">Scorecard</h1>
+    </div>
+    <div class="nine-toggle">
+      <button class="active" id="btn-front-nine" data-i18n="frontNine">Vordere Neun</button>
+      <button id="btn-back-nine" data-i18n="backNine">Hintere Neun</button>
+    </div>
+    <div class="card-table">
+      <div class="card-row head">
+        <div class="cell" data-i18n="hole">Loch</div>
+        <div class="cell" data-i18n="par">Par</div>
+        <div class="cell" data-i18n="hcp">HCP</div>
+        <div class="cell" data-i18n="herren">Herren</div>
+        <div class="cell" data-i18n="damen">Damen</div>
+        <div class="cell" data-i18n="score">Score</div>
+      </div>
+      <div id="scorecard-rows"></div>
+    </div>
+    <div class="note" data-i18n="scoreNote">Beispielwerte für Loch 2 auf Basis der Platzausschilderung. Übrige Lochdaten folgen.</div>
+    <div style="flex:1;"></div>
+    <nav class="footer-nav">
+      <div class="nav-row">
+        <button class="nav-item" data-nav="screen-main"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="21" x2="6" y2="4"/><path d="M6 5c2.2 0 3.4 1.1 6.5 1.1S16 5 18 5v7c-2 0-3.3 1.1-5.5 1.1S6 12 6 12"/></svg><span class="label" data-i18n="navHoles">Löcher</span></button>
+        <button class="nav-item" data-nav="screen-clubs"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="19" y2="5"/><path d="M14 5l5 5"/></svg><span class="label" data-i18n="navClubs">Schläger</span></button>
+        <button class="nav-item active" data-nav="screen-scorecard"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg><span class="label" data-i18n="navScorecard">Scorecard</span></button>
+        <button class="nav-item" data-nav="screen-more"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg><span class="label" data-i18n="navMore">Sonstiges</span></button>
+      </div>
+      <div class="credit" data-i18n="madeWith">made with &#9825; in Winterberg</div>
+    </nav>
+  </section>
+
+  <!-- ========== SONSTIGES ========== -->
+  <section id="screen-more" class="screen">
+    <div class="page-head">
+      <div class="eyebrow">GCWBB</div>
+      <h1 data-i18n="moreTitle">Sonstiges</h1>
+    </div>
+    <div class="list">
+      <button class="list-item" data-nav="screen-about">
+        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><line x1="12" y1="11" x2="12" y2="16.5"/><circle cx="12" cy="7.6" r="0.9" fill="var(--green)" stroke="none"/></svg></div>
+        <div class="body"><div class="name" data-i18n="about">Über</div><div class="meta" data-i18n="aboutSub">GC Winterberg &amp; die App</div></div>
+        <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <button class="list-item" data-nav="screen-contact">
+        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 6h16v12H4z"/><path d="M4 7l8 6 8-6"/></svg></div>
+        <div class="body"><div class="name" data-i18n="contact">Kontakt</div><div class="meta" data-i18n="contactSub">Anfragen &amp; Feedback</div></div>
+        <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      </button>
+      <div style="margin-top:16px;">
+        <div class="eyebrow" style="padding:0 4px 8px 4px;" data-i18n="language">Sprache</div>
+        <div class="lang-row" id="lang-row" style="padding:0;"></div>
+      </div>
+    </div>
+    <div class="credit" style="padding-bottom:4px;">GCWBB Version 0.1 &middot; Entwurf</div>
+    <nav class="footer-nav">
+      <div class="nav-row">
+        <button class="nav-item" data-nav="screen-main"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="21" x2="6" y2="4"/><path d="M6 5c2.2 0 3.4 1.1 6.5 1.1S16 5 18 5v7c-2 0-3.3 1.1-5.5 1.1S6 12 6 12"/></svg><span class="label" data-i18n="navHoles">Löcher</span></button>
+        <button class="nav-item" data-nav="screen-clubs"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="19" y2="5"/><path d="M14 5l5 5"/></svg><span class="label" data-i18n="navClubs">Schläger</span></button>
+        <button class="nav-item" data-nav="screen-scorecard"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg><span class="label" data-i18n="navScorecard">Scorecard</span></button>
+        <button class="nav-item active" data-nav="screen-more"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="12" cy="12" r="1.4" fill="currentColor" stroke="none"/><circle cx="19" cy="12" r="1.4" fill="currentColor" stroke="none"/></svg><span class="label" data-i18n="navMore">Sonstiges</span></button>
+      </div>
+      <div class="credit" data-i18n="madeWith">made with &#9825; in Winterberg</div>
+    </nav>
+  </section>
+
+  <!-- ========== ÜBER (Detail) ========== -->
+  <section id="screen-about" class="screen">
+    <div class="topbar">
+      <button class="icon-btn" data-back="screen-more" aria-label="Zurück"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="title-block"><div class="club" data-i18n="about">Über</div></div>
+    </div>
+    <div class="detail-body"><p id="about-text"></p></div>
+  </section>
+
+  <!-- ========== KONTAKT (Detail) ========== -->
+  <section id="screen-contact" class="screen">
+    <div class="topbar">
+      <button class="icon-btn" data-back="screen-more" aria-label="Zurück"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 6l-6 6 6 6"/></svg></button>
+      <div class="title-block"><div class="club" data-i18n="contact">Kontakt</div></div>
+    </div>
+    <div class="detail-body"><p id="contact-text" style="white-space:pre-line;"></p></div>
+  </section>
+
+</div>
+
+<!-- ========== MODAL: Schläger bearbeiten ========== -->
+<div class="modal-backdrop" id="club-modal">
+  <div class="modal-sheet">
+    <h2 id="modal-title" data-i18n="editClub">Schläger bearbeiten</h2>
+    <div class="field">
+      <label data-i18n="clubName">Bezeichnung</label>
+      <input type="text" id="field-name" maxlength="30">
+    </div>
+    <div class="field-row">
+      <div class="field">
+        <label data-i18n="minDist">Min. (m)</label>
+        <input type="number" id="field-min" min="0" max="400" inputmode="numeric">
+      </div>
+      <div class="field">
+        <label data-i18n="maxDist">Max. (m)</label>
+        <input type="number" id="field-max" min="0" max="400" inputmode="numeric">
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-danger" id="btn-delete-club" data-i18n="delete">Löschen</button>
+      <button class="btn btn-outline" id="btn-cancel-club" data-i18n="cancel">Abbrechen</button>
+      <button class="btn btn-primary" id="btn-save-club" data-i18n="save">Speichern</button>
+    </div>
+  </div>
+</div>
+
+<script src="js/data.js"></script>
+<script src="js/i18n.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
