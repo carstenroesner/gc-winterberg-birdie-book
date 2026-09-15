@@ -273,6 +273,18 @@ button{ font-family: inherit; }
 .lang-btn .flag{ font-size:22px; line-height:1; }
 .lang-btn.active{ border-color:var(--gold-deep); background:oklch(96% 0.03 90); color:var(--ink); }
 
+/* Kompakte Sprachauswahl auf der Startseite (oben rechts) */
+.start-lang-row{
+  position:absolute; top:max(env(safe-area-inset-top,0px), 14px); right:14px; z-index:2;
+  display:flex; gap:6px;
+}
+.start-lang-row .lang-btn{
+  flex:none; flex-direction:row; width:30px; height:30px; padding:0; border-radius:50%;
+  justify-content:center; align-items:center; background:oklch(99% 0.004 95 / .8);
+}
+.start-lang-row .lang-btn .flag{ font-size:15px; }
+.start-lang-row .lang-btn span:last-child{ display:none; }
+
 .credit{ text-align:center; font-size:9px; color:var(--ink-soft); padding: 6px 0 max(env(safe-area-inset-bottom,0px),8px) 0; flex-shrink:0; }
 
 /* ---------- Round history (Bestehende Runden) ---------- */

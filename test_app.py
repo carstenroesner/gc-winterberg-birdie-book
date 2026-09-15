@@ -14,6 +14,10 @@ async def main():
         await page.goto(BASE)
         await page.wait_for_timeout(400)
         await page.screenshot(path="test_01_start.png")
+        start_lang_row = await page.query_selector("#screen-start .start-lang-row #lang-row, #screen-start #lang-row")
+        assert start_lang_row is not None, "Sprachauswahl fehlt auf der Startseite"
+        start_lang_btns = await page.query_selector_all("#screen-start #lang-row .lang-btn")
+        assert len(start_lang_btns) == 3, "Sprachauswahl auf der Startseite zeigt nicht alle drei Sprachen"
 
         # Neue Runde -> landet auf Rundeneinstellungen (Pager-Seite 0)
         await page.click("#btn-new-round")
@@ -138,20 +142,31 @@ async def main():
         await page.wait_for_timeout(400)
         await page.screenshot(path="test_15_back_to_hole1.png")
 
-        # Sonstiges + Sprache
+        # Sonstiges (ohne Sprachauswahl, die jetzt auf der Startseite liegt)
         await page.click(".screen.active [data-nav='screen-more']")
         await page.wait_for_timeout(150)
         await page.screenshot(path="test_16_more.png")
+        more_lang_row = await page.query_selector("#screen-more #lang-row")
+        assert more_lang_row is None, "Sprachauswahl ist noch auf der Sonstiges-Seite vorhanden"
+        await page.click(".screen.active [data-back='screen-main']")
+        await page.wait_for_timeout(150)
 
-        await page.click(".lang-btn >> nth=1")  # englisch
+        # Sprache jetzt über die Startseite wechseln
+        await page.evaluate("showScreen('screen-start')")
+        await page.wait_for_timeout(150)
+        await page.click("#screen-start .lang-btn >> nth=1")  # englisch
         await page.wait_for_timeout(250)
         await page.screenshot(path="test_17_english.png")
 
         # Zurück auf deutsch wechseln für konsistenten Ausgangszustand
-        await page.click(".lang-btn >> nth=0")
+        await page.click("#screen-start .lang-btn >> nth=0")
         await page.wait_for_timeout(150)
 
         # Kontakt: Problem melden -> Dialog öffnen, ausfüllen, abbrechen
+        await page.evaluate("showScreen('screen-main')")
+        await page.wait_for_timeout(100)
+        await page.click(".screen.active [data-nav='screen-more']")
+        await page.wait_for_timeout(150)
         await page.click(".screen.active [data-nav='screen-contact']")
         await page.wait_for_timeout(150)
         await page.click("#btn-open-report")
