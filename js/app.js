@@ -11,7 +11,9 @@ let state = {
   isBack: false,         // false = vordere Neun (1-9), true = hintere Neun (10-18)
   scoreNine: "front",    // Anzeige auf der Scorecard: "front" | "back"
   currentRoundId: null,
-  editingClubId: null    // null = neuer Schläger im Modal
+  selectedClubId: null,  // im Anzeige-Modus ausgewählter Schläger (nur visuell)
+  clubsEditMode: false,  // true = gesamte Schläger-Liste wird bearbeitet
+  editBuffer: null       // Arbeitskopie der Schläger während des Bearbeitens
 };
 
 /* ---------- Persistenz ---------- */
@@ -202,87 +204,97 @@ function fmtDistance(c){
   return `${c.min}–${c.max} m`;
 }
 
-function renderClubs(){
-  const list = document.getElementById("clubs-list");
-  list.innerHTML = "";
-  const clubs = getClubs();
-  clubs.forEach(c => {
-    const item = document.createElement("button");
-    item.className = "list-item";
-    item.innerHTML = `
-      <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="18" y2="6"/><path d="M13 6l5 5"/><circle cx="6.2" cy="19.5" r="1.6" fill="var(--green)" stroke="none"/></svg></div>
-      <div class="body"><div class="name">${escapeHtml(c.name)}</div><div class="meta">${c.category} &middot; ${fmtDistance(c)}</div></div>
-      <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
-    `;
-    item.addEventListener("click", () => openClubModal(c.id));
-    list.appendChild(item);
-  });
-  const addBtn = document.createElement("button");
-  addBtn.className = "add-btn";
-  addBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>${t("addClub")}</span>`;
-  addBtn.addEventListener("click", () => openClubModal(null));
-  list.appendChild(addBtn);
-}
-
 function escapeHtml(s){
   return String(s).replace(/[&<>"']/g, m => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m]));
 }
+function escapeAttr(s){ return escapeHtml(s); }
 
-function openClubModal(clubId){
-  state.editingClubId = clubId;
-  const modal = document.getElementById("club-modal");
-  const nameInput = document.getElementById("field-name");
-  const minInput = document.getElementById("field-min");
-  const maxInput = document.getElementById("field-max");
-  const delBtn = document.getElementById("btn-delete-club");
-  const titleEl = document.getElementById("modal-title");
+function renderClubs(){
+  const list = document.getElementById("clubs-list");
+  const editBtn = document.getElementById("btn-edit-clubs");
+  const actionbar = document.getElementById("clubs-edit-actionbar");
+  list.innerHTML = "";
 
-  if (clubId){
-    const c = getClubs().find(x => x.id === clubId);
-    titleEl.textContent = t("editClub");
-    nameInput.value = c.name;
-    minInput.value = c.min ?? "";
-    maxInput.value = c.max ?? "";
-    delBtn.style.display = "block";
+  if (state.clubsEditMode){
+    editBtn.hidden = true;
+    actionbar.hidden = false;
+
+    state.editBuffer.forEach((c, idx) => {
+      const row = document.createElement("div");
+      row.className = "club-edit-row";
+      row.innerHTML = `
+        <div class="field">
+          <label>${t("clubName")}</label>
+          <input type="text" class="edit-name" maxlength="30" value="${escapeAttr(c.name)}">
+        </div>
+        <div class="field-row">
+          <div class="field"><label>${t("minDist")}</label><input type="number" class="edit-min" min="0" max="400" inputmode="numeric" value="${c.min ?? ""}"></div>
+          <div class="field"><label>${t("maxDist")}</label><input type="number" class="edit-max" min="0" max="400" inputmode="numeric" value="${c.max ?? ""}"></div>
+          <button type="button" class="btn-remove-row" data-idx="${idx}" aria-label="${t("delete")}">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 7h16"/><path d="M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/><path d="M6 7l1 13a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2l1-13"/></svg>
+          </button>
+        </div>
+      `;
+      row.querySelector(".edit-name").addEventListener("input", (e) => { state.editBuffer[idx].name = e.target.value; });
+      row.querySelector(".edit-min").addEventListener("input", (e) => { state.editBuffer[idx].min = e.target.value === "" ? null : parseInt(e.target.value, 10); });
+      row.querySelector(".edit-max").addEventListener("input", (e) => { state.editBuffer[idx].max = e.target.value === "" ? null : parseInt(e.target.value, 10); });
+      row.querySelector(".btn-remove-row").addEventListener("click", () => {
+        state.editBuffer.splice(idx, 1);
+        renderClubs();
+      });
+      list.appendChild(row);
+    });
+
+    const addBtn = document.createElement("button");
+    addBtn.className = "add-btn";
+    addBtn.innerHTML = `<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg><span>${t("addClub")}</span>`;
+    addBtn.addEventListener("click", () => {
+      state.editBuffer.push({ id: "c" + Date.now() + Math.random().toString(36).slice(2, 6), name: "", category: "Eigener Schläger", min: null, max: null });
+      renderClubs();
+      const nameInputs = list.querySelectorAll(".edit-name");
+      if (nameInputs.length) nameInputs[nameInputs.length - 1].focus();
+    });
+    list.appendChild(addBtn);
+
   } else {
-    titleEl.textContent = t("newClub");
-    nameInput.value = "";
-    minInput.value = "";
-    maxInput.value = "";
-    delBtn.style.display = "none";
+    editBtn.hidden = false;
+    actionbar.hidden = true;
+    const clubs = getClubs();
+    clubs.forEach(c => {
+      const item = document.createElement("button");
+      item.className = "list-item" + (state.selectedClubId === c.id ? " selected" : "");
+      item.innerHTML = `
+        <div class="ico"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="var(--green)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="19" x2="18" y2="6"/><path d="M13 6l5 5"/><circle cx="6.2" cy="19.5" r="1.6" fill="var(--green)" stroke="none"/></svg></div>
+        <div class="body"><div class="name">${escapeHtml(c.name)}</div><div class="meta">${c.category} &middot; ${fmtDistance(c)}</div></div>
+        <svg class="chev" width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 6l6 6-6 6"/></svg>
+      `;
+      item.addEventListener("click", () => {
+        state.selectedClubId = (state.selectedClubId === c.id) ? null : c.id;
+        renderClubs();
+      });
+      list.appendChild(item);
+    });
   }
-  modal.classList.add("open");
 }
-function closeClubModal(){
-  document.getElementById("club-modal").classList.remove("open");
-}
-document.getElementById("btn-cancel-club").addEventListener("click", closeClubModal);
-document.getElementById("club-modal").addEventListener("click", (e) => {
-  if (e.target.id === "club-modal") closeClubModal();
-});
-document.getElementById("btn-save-club").addEventListener("click", () => {
-  const name = document.getElementById("field-name").value.trim();
-  if (!name) return;
-  const minV = document.getElementById("field-min").value;
-  const maxV = document.getElementById("field-max").value;
-  const min = minV === "" ? null : parseInt(minV, 10);
-  const max = maxV === "" ? null : parseInt(maxV, 10);
 
-  let clubs = getClubs();
-  if (state.editingClubId){
-    clubs = clubs.map(c => c.id === state.editingClubId ? { ...c, name, min, max } : c);
-  } else {
-    clubs.push({ id: "c" + Date.now(), name, category: "Eigener Schläger", min, max });
-  }
-  saveClubs(clubs);
-  closeClubModal();
+document.getElementById("btn-edit-clubs").addEventListener("click", () => {
+  state.clubsEditMode = true;
+  state.editBuffer = JSON.parse(JSON.stringify(getClubs()));
   renderClubs();
 });
-document.getElementById("btn-delete-club").addEventListener("click", () => {
-  if (!state.editingClubId) return;
-  const clubs = getClubs().filter(c => c.id !== state.editingClubId);
-  saveClubs(clubs);
-  closeClubModal();
+document.getElementById("btn-cancel-clubs-edit").addEventListener("click", () => {
+  state.clubsEditMode = false;
+  state.editBuffer = null;
+  renderClubs();
+});
+document.getElementById("btn-save-clubs-edit").addEventListener("click", () => {
+  const cleaned = state.editBuffer
+    .filter(c => c.name && c.name.trim().length > 0)
+    .map(c => ({ ...c, name: c.name.trim() }));
+  saveClubs(cleaned);
+  state.clubsEditMode = false;
+  state.editBuffer = null;
+  state.selectedClubId = null;
   renderClubs();
 });
 

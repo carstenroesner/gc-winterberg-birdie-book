@@ -38,7 +38,7 @@
         <span data-i18n="existingRounds">Bestehende Runden</span>
       </button>
     </div>
-    <div class="credit" style="position:absolute;bottom:10px;left:0;right:0;" data-i18n="madeWith">made with &#9825; in Winterberg</div>
+    <div class="credit start-credit" data-i18n="madeWith">made with &#9825; in Winterberg</div>
   </section>
 
   <!-- ========== BESTEHENDE RUNDEN ========== -->
@@ -109,11 +109,18 @@
 
   <!-- ========== SCHLÄGER ========== -->
   <section id="screen-clubs" class="screen">
-    <div class="page-head">
-      <div class="eyebrow" data-i18n="clubsSub">Standardsatz</div>
-      <h1 data-i18n="clubsTitle">Schläger</h1>
+    <div class="page-head clubs-head">
+      <div>
+        <div class="eyebrow" data-i18n="clubsSub">Standardsatz</div>
+        <h1 data-i18n="clubsTitle">Schläger</h1>
+      </div>
+      <button class="btn-edit-toggle" id="btn-edit-clubs" data-i18n="edit">Bearbeiten</button>
     </div>
     <div class="list" id="clubs-list"></div>
+    <div class="edit-actionbar" id="clubs-edit-actionbar" hidden>
+      <button class="btn btn-outline" id="btn-cancel-clubs-edit" data-i18n="cancel">Abbrechen</button>
+      <button class="btn btn-primary" id="btn-save-clubs-edit" data-i18n="save">Speichern</button>
+    </div>
     <nav class="footer-nav">
       <div class="nav-row">
         <button class="nav-item" data-nav="screen-main"><svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><line x1="6" y1="21" x2="6" y2="4"/><path d="M6 5c2.2 0 3.4 1.1 6.5 1.1S16 5 18 5v7c-2 0-3.3 1.1-5.5 1.1S6 12 6 12"/></svg><span class="label" data-i18n="navHoles">Löcher</span></button>
@@ -211,32 +218,6 @@
     <div class="detail-body"><p id="contact-text" style="white-space:pre-line;"></p></div>
   </section>
 
-</div>
-
-<!-- ========== MODAL: Schläger bearbeiten ========== -->
-<div class="modal-backdrop" id="club-modal">
-  <div class="modal-sheet">
-    <h2 id="modal-title" data-i18n="editClub">Schläger bearbeiten</h2>
-    <div class="field">
-      <label data-i18n="clubName">Bezeichnung</label>
-      <input type="text" id="field-name" maxlength="30">
-    </div>
-    <div class="field-row">
-      <div class="field">
-        <label data-i18n="minDist">Min. (m)</label>
-        <input type="number" id="field-min" min="0" max="400" inputmode="numeric">
-      </div>
-      <div class="field">
-        <label data-i18n="maxDist">Max. (m)</label>
-        <input type="number" id="field-max" min="0" max="400" inputmode="numeric">
-      </div>
-    </div>
-    <div class="modal-actions">
-      <button class="btn btn-danger" id="btn-delete-club" data-i18n="delete">Löschen</button>
-      <button class="btn btn-outline" id="btn-cancel-club" data-i18n="cancel">Abbrechen</button>
-      <button class="btn btn-primary" id="btn-save-club" data-i18n="save">Speichern</button>
-    </div>
-  </div>
 </div>
 
 <script src="js/data.js"></script>
