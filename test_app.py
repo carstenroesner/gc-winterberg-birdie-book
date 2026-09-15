@@ -36,8 +36,14 @@ async def main():
         assert not back_col_hidden_2, "Hintere Spalte blieb im 18-Loch-Modus ausgeblendet"
         await page.screenshot(path="test_04_eighteen_hole.png")
 
-        # Loch 5 über die vordere Liste auswählen (Wisch-Prinzip-Erweiterung: Direktsprung bleibt erhalten)
-        await page.click("#col-front .hole-list-item:nth-child(5)")
+        # Einstellungen-Reiter (Position 1 in der linken Spalte, über Loch 1) pruefen
+        settings_tab_active = await page.eval_on_selector(
+            "#col-front .hole-list-item[data-page='0']", "el => el.classList.contains('active')"
+        )
+        assert settings_tab_active, "Einstellungen-Reiter wurde nicht als aktiv markiert"
+
+        # Loch 5 über die vordere Liste auswählen (Reiter-Direktsprung; Reiter 1 ist Einstellungen, daher +1)
+        await page.click("#col-front .hole-list-item:nth-child(6)")
         await page.wait_for_timeout(400)
         await page.screenshot(path="test_05_hole5.png")
         hole5_active = await page.eval_on_selector(
@@ -56,10 +62,14 @@ async def main():
         await page.wait_for_timeout(300)
         await page.screenshot(path="test_07_swipe_next.png")
 
-        # Schläger-Screen
+        # Schläger jetzt über Kopfzeilen-Menü (Drei-Punkte) -> Sonstiges -> Schläger erreichbar (kein Fußmenü mehr)
+        await page.click(".screen.active [data-nav='screen-more']")
+        await page.wait_for_timeout(150)
         await page.click(".screen.active [data-nav='screen-clubs']")
         await page.wait_for_timeout(150)
         await page.screenshot(path="test_08_clubs.png")
+        clubs_back_btn = await page.query_selector("#screen-clubs [data-back='screen-main']")
+        assert clubs_back_btn is not None, "Zurück-Button auf dem Schläger-Bildschirm fehlt"
 
         # Schläger auswählen (nur visuell, kein Modal)
         await page.click(".list-item")
@@ -105,8 +115,10 @@ async def main():
         first_name = await page.text_content(".list-item .name")
         assert "SOLLTE NICHT" not in (first_name or ""), "Abbrechen hat Änderung trotzdem gespeichert"
 
-        # Scorecard über die Fußleiste erreichen (jetzt Teil des Pagers, nach dem letzten Loch)
-        await page.click(".screen.active .nav-scorecard-btn")
+        # Zurück zum Hauptbildschirm, dann Scorecard-Reiter (letzter Reiter der rechten Spalte bei 18-Loch-Runde)
+        await page.click("#screen-clubs [data-back='screen-main']")
+        await page.wait_for_timeout(200)
+        await page.click("#col-back .hole-list-item:last-child")
         await page.wait_for_timeout(400)
         await page.screenshot(path="test_13_scorecard.png")
         score_inputs = await page.query_selector_all(".score-input")
@@ -121,8 +133,8 @@ async def main():
         await page.wait_for_timeout(150)
         await page.screenshot(path="test_14_scorecard_back.png")
 
-        # Löcher-Button in der Fußleiste -> zurück zu Loch 1
-        await page.click(".screen.active .nav-holes-btn")
+        # Einstellungen-Reiter -> zurück zur ersten Pager-Seite
+        await page.click("#col-front .hole-list-item[data-page='0']")
         await page.wait_for_timeout(400)
         await page.screenshot(path="test_15_back_to_hole1.png")
 

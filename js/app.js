@@ -59,7 +59,6 @@ function showScreen(id){
   document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
   const el = document.getElementById(id);
   if (el) el.classList.add("active");
-  document.querySelectorAll(".nav-item").forEach(n => n.classList.toggle("active", n.dataset.nav === id));
   window.scrollTo(0,0);
 }
 
@@ -68,18 +67,6 @@ document.querySelectorAll("[data-nav]").forEach(el => {
 });
 document.querySelectorAll("[data-back]").forEach(el => {
   el.addEventListener("click", () => showScreen(el.dataset.back));
-});
-
-/* Löcher- und Scorecard-Knöpfe in der Fußleiste zeigen zusätzlich zum Bildschirmwechsel
-   gezielt die passende Pager-Seite (Loch 1 bzw. die Scorecard-Seite). */
-document.querySelectorAll(".nav-holes-btn").forEach(btn => {
-  btn.addEventListener("click", () => navigateToPage(1, false));
-});
-document.querySelectorAll(".nav-scorecard-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const hc = holeCountFor(getCurrentRound());
-    navigateToPage(hc + 1, false);
-  });
 });
 
 /* ---------- Start: Neue Runde / Bestehende Runden ---------- */
@@ -338,12 +325,15 @@ function renderHoleColumns(hc){
   const front = document.getElementById("col-front");
   const back = document.getElementById("col-back");
   front.innerHTML = ""; back.innerHTML = "";
+  front.appendChild(settingsListItem());
   const frontCount = Math.min(hc, 9);
   for (let n = 1; n <= frontCount; n++) front.appendChild(holeListItem(n));
   if (hc > 9){
     back.classList.remove("hidden-col");
     for (let n = 10; n <= hc; n++) back.appendChild(holeListItem(n));
+    back.appendChild(scorecardListItem(hc));
   } else {
+    front.appendChild(scorecardListItem(hc));
     back.classList.add("hidden-col");
   }
 }
@@ -353,7 +343,30 @@ function holeListItem(pageIndex){
   b.className = "hole-list-item" + (pageIndex === state.activePage ? " active" : "");
   b.textContent = pageIndex;
   b.dataset.page = pageIndex;
-  b.addEventListener("click", () => navigateToPage(pageIndex));
+  b.addEventListener("click", () => navigateToPage(pageIndex, false));
+  return b;
+}
+/* Reiter „Einstellungen" (immer Seite 0, oben in der linken Spalte, über Loch 1) und
+   „Scorecard" (letzte Seite, unter Loch 9 bzw. Loch 18 – je nach Rundenlänge). */
+function settingsListItem(){
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "hole-list-item tab-icon" + (0 === state.activePage ? " active" : "");
+  b.dataset.page = 0;
+  b.setAttribute("aria-label", t("settingsTitle"));
+  b.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-4 0v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82A1.65 1.65 0 0 0 3 13.09H3a2 2 0 0 1 0-4h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 4 0v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 1 1 2.83 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 0 4h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>`;
+  b.addEventListener("click", () => navigateToPage(0, false));
+  return b;
+}
+function scorecardListItem(hc){
+  const pageIndex = hc + 1;
+  const b = document.createElement("button");
+  b.type = "button";
+  b.className = "hole-list-item tab-icon" + (pageIndex === state.activePage ? " active" : "");
+  b.dataset.page = pageIndex;
+  b.setAttribute("aria-label", t("scorecardTitle"));
+  b.innerHTML = `<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="4" width="16" height="16" rx="2.5"/><line x1="4" y1="10" x2="20" y2="10"/><line x1="9" y1="10" x2="9" y2="20"/></svg>`;
+  b.addEventListener("click", () => navigateToPage(pageIndex, false));
   return b;
 }
 
