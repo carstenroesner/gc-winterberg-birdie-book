@@ -162,25 +162,60 @@ const HOLE_SKETCH_DEFS = {
        water:null, bunkers:[{cx:42,cy:148,rx:11,ry:8}], green:{cx:78,cy:154,rx:20,ry:13}, flag:{x:72,y:136} }
 };
 
+/* Erweiterte Lochskizzen (Designmuster Loch 2, auf alle 9 Löcher übertragen, 15.09.2026):
+   gleiche, individuell abgestimmte Fairway-/Wasser-/Bunker-/Grün-Geometrie je Loch (HOLE_SKETCH_DEFS,
+   unverändert), aber mit reicherer Zeichentechnik: Wasser mit Verlauf + Wellenlinien, Bunker mit
+   Sand-Textur + Schattenkante, Mähstreifen-Effekt im Fairway (per Clip-Path), Grün mit Fransensaum,
+   sowie zwei kleine Tee-Markierungen am Abschlag. */
 function holeSketchSVG(n){
   const def = HOLE_SKETCH_DEFS[n] || HOLE_SKETCH_DEFS[1];
-  const waterEl = def.water
-    ? `<ellipse cx="${def.water.cx}" cy="${def.water.cy}" rx="${def.water.rx}" ry="${def.water.ry}" fill="var(--water)" stroke="oklch(60% 0.08 235)" stroke-width="1"/>`
-    : "";
-  const bunkerEls = def.bunkers.map(b =>
-    `<ellipse cx="${b.cx}" cy="${b.cy}" rx="${b.rx}" ry="${b.ry}" fill="var(--sand)" stroke="oklch(70% 0.06 85)" stroke-width="1"/>`
-  ).join("");
+  const teeMatch = /^M\s*([\d.]+)[\s,]+([\d.]+)/.exec(def.fairway.trim());
+  const tee = teeMatch ? { x: parseFloat(teeMatch[1]), y: parseFloat(teeMatch[2]) } : { x: 90, y: 18 };
+
+  const waterBody = def.water ? `
+    <ellipse cx="${def.water.cx}" cy="${def.water.cy}" rx="${def.water.rx}" ry="${def.water.ry}" fill="url(#sk-water-${n})" stroke="oklch(58% 0.1 235)" stroke-width="1"/>
+    <g stroke="oklch(90% 0.03 220)" stroke-width="1" opacity="0.6" fill="none" stroke-linecap="round">
+      <path d="M ${def.water.cx - def.water.rx*0.55} ${def.water.cy - def.water.ry*0.15} C ${def.water.cx - def.water.rx*0.2} ${def.water.cy - def.water.ry*0.4}, ${def.water.cx + def.water.rx*0.15} ${def.water.cy - def.water.ry*0.4}, ${def.water.cx + def.water.rx*0.5} ${def.water.cy - def.water.ry*0.1}"/>
+      <path d="M ${def.water.cx - def.water.rx*0.4} ${def.water.cy + def.water.ry*0.2} C ${def.water.cx - def.water.rx*0.1} ${def.water.cy}, ${def.water.cx + def.water.rx*0.25} ${def.water.cy}, ${def.water.cx + def.water.rx*0.55} ${def.water.cy + def.water.ry*0.25}"/>
+    </g>` : "";
+
+  const bunkerEls = def.bunkers.map(b => {
+    const dots = [[-0.5,0.1],[-0.15,-0.4],[0.25,0.3],[0.5,-0.15],[0.05,0.45]]
+      .map(([ox,oy]) => `<circle cx="${(b.cx + ox*b.rx).toFixed(1)}" cy="${(b.cy + oy*b.ry).toFixed(1)}" r="0.9"/>`).join("");
+    return `
+    <g>
+      <ellipse cx="${b.cx}" cy="${b.cy}" rx="${b.rx}" ry="${b.ry}" fill="var(--sand)" stroke="oklch(66% 0.06 85)" stroke-width="1"/>
+      <path d="M ${(b.cx - b.rx*0.6).toFixed(1)} ${(b.cy - b.ry*0.3).toFixed(1)} A ${(b.rx*0.8).toFixed(1)} ${(b.ry*0.6).toFixed(1)} 0 0 1 ${(b.cx + b.rx*0.6).toFixed(1)} ${(b.cy - b.ry*0.2).toFixed(1)}" fill="none" stroke="oklch(70% 0.06 85)" stroke-width="1" opacity="0.6"/>
+      <g fill="oklch(66% 0.06 85)" opacity="0.55">${dots}</g>
+    </g>`;
+  }).join("");
+
+  const stripes = [];
+  for (let y = -60; y < 280; y += 42) stripes.push(`<line x1="-20" y1="${y}" x2="200" y2="${y - 60}" stroke="var(--rough)" stroke-width="15" opacity="0.1"/>`);
+
   return `
   <svg width="150" height="190" viewBox="0 0 180 230">
+    <defs>
+      <clipPath id="sk-clip-${n}"><path d="${def.fairway}"/></clipPath>
+      ${def.water ? `<radialGradient id="sk-water-${n}" cx="40%" cy="30%" r="80%">
+        <stop offset="0%" stop-color="oklch(78% 0.08 220)"/>
+        <stop offset="100%" stop-color="var(--water)"/>
+      </radialGradient>` : ""}
+    </defs>
     <g fill="var(--rough)" opacity="0.85">
-      <circle cx="44" cy="30" r="7"/><circle cx="36" cy="55" r="5"/><circle cx="32" cy="85" r="7"/><circle cx="34" cy="115" r="6"/><circle cx="40" cy="145" r="6"/><circle cx="36" cy="170" r="5"/><circle cx="40" cy="195" r="6"/>
-      <circle cx="130" cy="30" r="6"/><circle cx="138" cy="55" r="5"/><circle cx="142" cy="85" r="6"/><circle cx="140" cy="115" r="7"/><circle cx="134" cy="145" r="7"/><circle cx="138" cy="170" r="5"/><circle cx="132" cy="195" r="5"/>
+      <circle cx="44" cy="30" r="7"/><circle cx="38" cy="26" r="4.5"/><circle cx="36" cy="55" r="5"/><circle cx="32" cy="85" r="7"/><circle cx="26" cy="81" r="4"/><circle cx="34" cy="115" r="6"/><circle cx="40" cy="145" r="6"/><circle cx="36" cy="170" r="5"/><circle cx="40" cy="195" r="6"/><circle cx="34" cy="199" r="4"/>
+      <circle cx="130" cy="30" r="6"/><circle cx="138" cy="55" r="5"/><circle cx="144" cy="51" r="4"/><circle cx="142" cy="85" r="6"/><circle cx="140" cy="115" r="7"/><circle cx="146" cy="111" r="4.2"/><circle cx="134" cy="145" r="7"/><circle cx="138" cy="170" r="5"/><circle cx="132" cy="195" r="5"/>
       <circle cx="100" cy="10" r="6"/><circle cx="70" cy="10" r="6"/>
     </g>
-    <path d="${def.fairway}" fill="var(--fairway)" stroke="oklch(70% 0.06 150)" stroke-width="1.5"/>
-    ${waterEl}
+    <path d="${def.fairway}" fill="var(--fairway)" stroke="oklch(68% 0.07 150)" stroke-width="1.5"/>
+    <g clip-path="url(#sk-clip-${n})">${stripes.join("")}</g>
+    ${waterBody}
     ${bunkerEls}
+    <ellipse cx="${def.green.cx}" cy="${def.green.cy}" rx="${(def.green.rx*1.25).toFixed(1)}" ry="${(def.green.ry*1.25).toFixed(1)}" fill="var(--rough)" opacity="0.3"/>
     <ellipse cx="${def.green.cx}" cy="${def.green.cy}" rx="${def.green.rx}" ry="${def.green.ry}" fill="oklch(80% 0.09 150)" stroke="oklch(60% 0.08 150)" stroke-width="1.5"/>
+    <circle cx="${def.flag.x - 4}" cy="${def.flag.y + 15}" r="1.3" fill="oklch(40% 0.06 150)"/>
+    <ellipse cx="${(tee.x - 6).toFixed(1)}" cy="${(tee.y - 2).toFixed(1)}" rx="2.6" ry="1.7" fill="var(--gold)"/>
+    <ellipse cx="${(tee.x + 6).toFixed(1)}" cy="${(tee.y - 2).toFixed(1)}" rx="2.6" ry="1.7" fill="oklch(97% 0.012 95)" stroke="oklch(70% 0.02 95)" stroke-width="0.8"/>
     <line x1="${def.flag.x}" y1="${def.flag.y + 22}" x2="${def.flag.x}" y2="${def.flag.y}" stroke="var(--ink)" stroke-width="1.5"/>
     <path d="M${def.flag.x} ${def.flag.y} L${def.flag.x + 14} ${def.flag.y + 5} L${def.flag.x} ${def.flag.y + 10} Z" fill="var(--red)"/>
   </svg>`;
