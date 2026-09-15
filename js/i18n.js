@@ -30,7 +30,20 @@ const I18N = {
     clubName: "Bezeichnung", minDist: "Min. (m)", maxDist: "Max. (m)",
     editClub: "Schläger bearbeiten", newClub: "Neuer Schläger",
     aboutText: "GC Winterberg – 9-Loch-Turnierplatz. Der Platz wird mit zwei Abschlagsätzen (Herren „Schanze“, Damen „Bob“) wie ein 18-Loch-Kurs gespielt. Course Rating/Slope: Herren 70,9/135, Damen 73,6/134 (Par 70).",
-    contactText: "Adresse: {address}\nTelefon: {phone}\nE-Mail: {email}\nWeb: {web}"
+    contactText: "Adresse: {address}\nTelefon: {phone}\nE-Mail: {email}\nWeb: {web}",
+    settingsTitle: "Rundeneinstellungen",
+    settingsSub: "Lege fest, wie deine Runde gespielt wird.",
+    roundType: "Rundenlänge",
+    nineHoleRound: "9-Loch-Runde",
+    eighteenHoleRound: "18-Loch-Runde",
+    reportIssueBtn: "Problem oder Anregung melden",
+    reportIssueTitle: "Problem oder Anregung melden",
+    reportBug: "Problem",
+    reportIdea: "Anregung",
+    issueTitleLabel: "Titel",
+    issueDescLabel: "Beschreibung",
+    issueOpenBtn: "Issue öffnen",
+    reportIssueHint: "Öffnet ein vorausgefülltes GitHub-Issue in deinem Browser – die Übermittlung erfolgt dort mit deinem eigenen GitHub-Konto."
   },
   en: {
     flag: "🇬🇧", label: "English",
@@ -60,7 +73,20 @@ const I18N = {
     clubName: "Name", minDist: "Min. (m)", maxDist: "Max. (m)",
     editClub: "Edit club", newClub: "New club",
     aboutText: "GC Winterberg – 9-hole tournament course. The course is played like an 18-hole course using two tee sets (men “Schanze”, women “Bob”). Course rating/slope: men 70.9/135, women 73.6/134 (par 70).",
-    contactText: "Address: {address}\nPhone: {phone}\nEmail: {email}\nWeb: {web}"
+    contactText: "Address: {address}\nPhone: {phone}\nEmail: {email}\nWeb: {web}",
+    settingsTitle: "Round settings",
+    settingsSub: "Choose how your round is played.",
+    roundType: "Round length",
+    nineHoleRound: "9-hole round",
+    eighteenHoleRound: "18-hole round",
+    reportIssueBtn: "Report a problem or idea",
+    reportIssueTitle: "Report a problem or idea",
+    reportBug: "Problem",
+    reportIdea: "Idea",
+    issueTitleLabel: "Title",
+    issueDescLabel: "Description",
+    issueOpenBtn: "Open issue",
+    reportIssueHint: "Opens a pre-filled GitHub issue in your browser – it is submitted there with your own GitHub account."
   },
   nl: {
     flag: "🇳🇱", label: "Nederlands",
@@ -90,7 +116,20 @@ const I18N = {
     clubName: "Naam", minDist: "Min. (m)", maxDist: "Max. (m)",
     editClub: "Club bewerken", newClub: "Nieuwe club",
     aboutText: "GC Winterberg – 9-holes toernooibaan. De baan wordt met twee afslagsets (heren “Schanze”, dames “Bob”) als een 18-holes baan gespeeld. Course rating/slope: heren 70,9/135, dames 73,6/134 (par 70).",
-    contactText: "Adres: {address}\nTelefoon: {phone}\nE-mail: {email}\nWeb: {web}"
+    contactText: "Adres: {address}\nTelefoon: {phone}\nE-mail: {email}\nWeb: {web}",
+    settingsTitle: "Rondeinstellingen",
+    settingsSub: "Bepaal hoe je ronde wordt gespeeld.",
+    roundType: "Rondelengte",
+    nineHoleRound: "9-holes ronde",
+    eighteenHoleRound: "18-holes ronde",
+    reportIssueBtn: "Probleem of idee melden",
+    reportIssueTitle: "Probleem of idee melden",
+    reportBug: "Probleem",
+    reportIdea: "Idee",
+    issueTitleLabel: "Titel",
+    issueDescLabel: "Beschrijving",
+    issueOpenBtn: "Issue openen",
+    reportIssueHint: "Opent een vooringevuld GitHub-issue in je browser – het wordt daar verzonden met je eigen GitHub-account."
   }
 };
 
