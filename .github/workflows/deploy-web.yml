@@ -40,8 +40,10 @@ jobs:
 
       - name: Run tests
         run: |
+          set +e
           flutter test --reporter expanded > /tmp/test_output.txt 2>&1
           code=$?
+          set -e
           if [ $code -ne 0 ]; then
             while IFS= read -r line; do
               [ -n "$line" ] && echo "::error::$line"
