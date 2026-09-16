@@ -38,7 +38,9 @@ void main() {
     await tester.pumpAndSettle();
 
     // Loch 2 (Par 5, HCP 11, Herren 450, Damen 406 auf der vorderen Neun).
-    expect(find.text('5'), findsOneWidget); // Par von Loch 2
+    // "5" kollidiert mit der Zeilennummer von Loch 5 in der 9-Loch-Tabelle,
+    // daher findsWidgets statt findsOneWidget.
+    expect(find.text('5'), findsWidgets); // Par von Loch 2
     expect(find.text('450'), findsOneWidget);
     expect(find.text('406'), findsOneWidget);
 

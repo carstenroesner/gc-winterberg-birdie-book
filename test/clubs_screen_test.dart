@@ -45,7 +45,13 @@ void main() {
     await tester.enterText(nameField, 'Driver Pro');
     await tester.pumpAndSettle();
 
-    // Eine neue Zeile hinzufügen.
+    // Eine neue Zeile hinzufügen (Button liegt unterhalb der 12 Zeilen,
+    // ListView baut ihn erst nach dem Scrollen).
+    await tester.scrollUntilVisible(
+      find.text('Schläger hinzufügen'),
+      200.0,
+      scrollable: find.byType(Scrollable).first,
+    );
     await tester.tap(find.text('Schläger hinzufügen'));
     await tester.pumpAndSettle();
     expect(clubs.editBuffer.length, 13);

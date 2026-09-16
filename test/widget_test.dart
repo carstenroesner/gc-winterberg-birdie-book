@@ -41,6 +41,8 @@ void main() {
     await tester.tap(find.text('Neue Runde'));
     await tester.pumpAndSettle();
 
-    expect(find.text('Rundeneinstellungen'), findsOneWidget);
+    // Erscheint zweimal: in der Kontextzeile der Kopfleiste und als
+    // Seiten-Überschrift der Rundeneinstellungen-Seite selbst.
+    expect(find.text('Rundeneinstellungen'), findsWidgets);
   });
 }
