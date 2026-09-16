@@ -49,41 +49,26 @@ jobs:
           import re
           with open('/tmp/test_output.txt', encoding='utf-8', errors='replace') as f:
               lines = f.read().splitlines()
-          # Erst: alle Zeilen, die einen fehlgeschlagenen Test benennen
-          # (Format "HH:MM +N -M: <name>"), das ist zuverlaessiger als
-          # Exception-Text-Matching und erfasst jeden Fehlschlag einzeln.
-          fail_names = []
-          for l in lines:
+          fail_idx = []
+          for i, l in enumerate(lines):
               m = re.match(r'^\d\d:\d\d \+\d+ -\d+: (.+)$', l)
               if m:
-                  fail_names.append(m.group(1).strip()[:200])
-          seen = set()
+                  name = m.group(1).strip()
+                  if name in ('Some tests failed.',):
+                      continue
+                  fail_idx.append((i, name[:200]))
+          seen_names = set()
           count = 0
-          for n in fail_names:
-              if n in seen:
+          for i, name in fail_idx:
+              if name in seen_names:
                   continue
-              seen.add(n)
-              print('::error::FAILED TEST: ' + n)
+              seen_names.add(name)
+              detail_lines = [x.strip() for x in lines[i + 1:i + 9] if x.strip()]
+              detail = ' / '.join(detail_lines)[:500]
+              print('::error::' + name + ' :: ' + detail)
               count += 1
               if count >= 10:
                   break
-          # Danach: Exception-Details dazu, so weit der Rahmen reicht.
-          for i, l in enumerate(lines):
-              if count >= 10:
-                  break
-              if 'EXCEPTION CAUGHT' in l or ('following' in l and 'thrown' in l):
-                  name = ''
-                  for j in range(i - 1, max(i - 25, -1), -1):
-                      if re.match(r'^\d\d:\d\d \+\d+.*:', lines[j]):
-                          name = lines[j].strip()
-                          break
-                  detail = ' / '.join(x.strip() for x in lines[i + 1:i + 6] if x.strip())
-                  out = (name + ' :: ' + detail)[:400]
-                  if out in seen:
-                      continue
-                  seen.add(out)
-                  print('::error::' + out)
-                  count += 1
           PYEOF
             python3 /tmp/parse_failures.py
           fi
