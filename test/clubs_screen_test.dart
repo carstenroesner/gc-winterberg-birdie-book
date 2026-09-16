@@ -63,6 +63,14 @@ void main() {
     expect(clubs.editMode, isFalse);
     expect(clubs.clubs.length, 12);
     expect(clubs.clubs.first.name, 'Driver');
+
+    // Nach dem Scrollen zum Hinzufügen-Button oben ist die Liste noch nicht
+    // wieder nach oben gescrollt - erst zurückscrollen, dann prüfen.
+    await tester.scrollUntilVisible(
+      find.text('Driver'),
+      -200.0,
+      scrollable: find.byType(Scrollable).first,
+    );
     expect(find.text('Driver'), findsOneWidget);
     expect(find.text('Driver Pro'), findsNothing);
   });

@@ -49,8 +49,28 @@ jobs:
           import re
           with open('/tmp/test_output.txt', encoding='utf-8', errors='replace') as f:
               lines = f.read().splitlines()
-          out = []
+          # Erst: alle Zeilen, die einen fehlgeschlagenen Test benennen
+          # (Format "HH:MM +N -M: <name>"), das ist zuverlaessiger als
+          # Exception-Text-Matching und erfasst jeden Fehlschlag einzeln.
+          fail_names = []
+          for l in lines:
+              m = re.match(r'^\d\d:\d\d \+\d+ -\d+: (.+)$', l)
+              if m:
+                  fail_names.append(m.group(1).strip()[:200])
+          seen = set()
+          count = 0
+          for n in fail_names:
+              if n in seen:
+                  continue
+              seen.add(n)
+              print('::error::FAILED TEST: ' + n)
+              count += 1
+              if count >= 10:
+                  break
+          # Danach: Exception-Details dazu, so weit der Rahmen reicht.
           for i, l in enumerate(lines):
+              if count >= 10:
+                  break
               if 'EXCEPTION CAUGHT' in l or ('following' in l and 'thrown' in l):
                   name = ''
                   for j in range(i - 1, max(i - 25, -1), -1):
@@ -58,17 +78,12 @@ jobs:
                           name = lines[j].strip()
                           break
                   detail = ' / '.join(x.strip() for x in lines[i + 1:i + 6] if x.strip())
-                  out.append((name + ' :: ' + detail)[:400])
-          seen = set()
-          count = 0
-          for o in out:
-              if o in seen:
-                  continue
-              seen.add(o)
-              print('::error::' + o)
-              count += 1
-              if count >= 10:
-                  break
+                  out = (name + ' :: ' + detail)[:400]
+                  if out in seen:
+                      continue
+                  seen.add(out)
+                  print('::error::' + out)
+                  count += 1
           PYEOF
             python3 /tmp/parse_failures.py
           fi
