@@ -108,10 +108,14 @@ class ClubsService extends ChangeNotifier {
   }
 
   /// Übernimmt den Bearbeitungspuffer, verwirft leere Namenszeilen
-  /// (entspricht dem `cleaned`-Filter in js/app.js) und persistiert.
+  /// (entspricht dem `cleaned`-Filter in js/app.js), trimmt die
+  /// Bezeichnung und persistiert.
   Future<void> saveEdit() async {
     _requireBuffer();
-    _clubs = _editBuffer!.where((c) => c.name.trim().isNotEmpty).toList();
+    _clubs = _editBuffer!
+        .where((c) => c.name.trim().isNotEmpty)
+        .map((c) => c.copyWith(name: c.name.trim()))
+        .toList();
     _editMode = false;
     _editBuffer = null;
     notifyListeners();

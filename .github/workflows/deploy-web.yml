@@ -39,40 +39,7 @@ jobs:
         run: flutter pub get
 
       - name: Run tests
-        run: |
-          set +e
-          flutter test --reporter expanded > /tmp/test_output.txt 2>&1
-          code=$?
-          set -e
-          if [ $code -ne 0 ]; then
-            cat > /tmp/parse_failures.py <<'PYEOF'
-          import re
-          with open('/tmp/test_output.txt', encoding='utf-8', errors='replace') as f:
-              lines = f.read().splitlines()
-          fail_idx = []
-          for i, l in enumerate(lines):
-              m = re.match(r'^\d\d:\d\d \+\d+ -\d+: (.+)$', l)
-              if m:
-                  name = m.group(1).strip()
-                  if name in ('Some tests failed.',):
-                      continue
-                  fail_idx.append((i, name[:200]))
-          seen_names = set()
-          count = 0
-          for i, name in fail_idx:
-              if name in seen_names:
-                  continue
-              seen_names.add(name)
-              detail_lines = [x.strip() for x in lines[i + 1:i + 9] if x.strip()]
-              detail = ' / '.join(detail_lines)[:500]
-              print('::error::' + name + ' :: ' + detail)
-              count += 1
-              if count >= 10:
-                  break
-          PYEOF
-            python3 /tmp/parse_failures.py
-          fi
-          exit $code
+        run: flutter test
 
       - name: Build web release
         run: flutter build web --release --base-href /gc-winterberg-birdie-book/
