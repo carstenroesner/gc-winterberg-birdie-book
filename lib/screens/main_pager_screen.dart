@@ -82,6 +82,11 @@ class _MainPagerScreenState extends State<MainPagerScreen> {
       if (hc > 9) BookTabItem.scorecard(pageIndex: lastPage),
     ];
 
+    // Zusätzlicher unterer Abstand für die Reiterleisten (5 % der
+    // Bildschirmhöhe): schützt den untersten Reiter vor der abgerundeten
+    // Display-Ecke bzw. der Home-Indicator-Zone auf iPhone-Pro-Geräten.
+    final railBottomInset = MediaQuery.of(context).size.height * 0.05;
+
     return Scaffold(
       appBar: AppBar(
         title: Column(
@@ -111,7 +116,7 @@ class _MainPagerScreenState extends State<MainPagerScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+            padding: EdgeInsets.only(left: 4, right: 4, top: 12, bottom: 12 + railBottomInset),
             child: BookTabRail(
               side: BookTabSide.left,
               items: leftItems,
@@ -128,7 +133,7 @@ class _MainPagerScreenState extends State<MainPagerScreen> {
           ),
           if (rightItems.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
+              padding: EdgeInsets.only(left: 4, right: 4, top: 12, bottom: 12 + railBottomInset),
               child: BookTabRail(
                 side: BookTabSide.right,
                 items: rightItems,

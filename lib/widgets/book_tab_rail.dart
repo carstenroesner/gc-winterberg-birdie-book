@@ -1,9 +1,10 @@
 // "Buchregister"-Reiterleiste (links: Zahnrad + Löcher 1-9 [+ Scorecard bei
 // 9-Loch-Runde]; rechts: Löcher 10-18 + Scorecard bei 18-Loch-Runde).
 // Nachbau von renderHoleColumns()/holeListItem()/settingsListItem()/
-// scorecardListItem() aus js/app.js: jeder Reiter ist ein eigenständiges,
-// zur Buchmitte hin eckiges, außen abgerundetes Element mit Schatten; der
-// aktive Reiter hebt sich per Gold-Farbe ab und "poppt" leicht heraus.
+// scorecardListItem() aus js/app.js: die Reiter bilden EINE durchgehende,
+// flächige Leiste (nur die äußeren Enden abgerundet, dünne Trennlinien
+// zwischen den Zellen), die sich gleichmäßig über die volle Höhe verteilt;
+// der aktive Reiter hebt sich per Gold-Farbe ab und "poppt" leicht heraus.
 
 import 'package:flutter/material.dart';
 
@@ -46,23 +47,35 @@ class BookTabRail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment:
-          side == BookTabSide.left ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-      children: [
-        for (final item in items) _buildTab(context, item),
-      ],
-    );
-  }
-
-  Widget _buildTab(BuildContext context, BookTabItem item) {
-    final isActive = item.pageIndex == activePage;
     final outerRadius = const Radius.circular(10);
     final borderRadius = side == BookTabSide.left
         ? BorderRadius.only(topLeft: outerRadius, bottomLeft: outerRadius)
         : BorderRadius.only(topRight: outerRadius, bottomRight: outerRadius);
+
+    return SizedBox(
+      width: 30,
+      child: ClipRRect(
+        borderRadius: borderRadius,
+        child: Material(
+          color: GolfPalette.surface,
+          elevation: 2,
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              for (var i = 0; i < items.length; i++)
+                Expanded(
+                  child: _buildTab(context, items[i], isLast: i == items.length - 1),
+                ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTab(BuildContext context, BookTabItem item, {required bool isLast}) {
+    final isActive = item.pageIndex == activePage;
 
     final label = switch (item.kind) {
       BookTabKind.settings => const Icon(Icons.settings, size: 15),
@@ -73,22 +86,20 @@ class BookTabRail extends StatelessWidget {
         ),
     };
 
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 2),
-      child: Material(
+    return DecoratedBox(
+      decoration: BoxDecoration(
         color: isActive ? GolfPalette.gold : GolfPalette.surface,
-        elevation: isActive ? 3 : 1,
-        borderRadius: borderRadius,
-        child: InkWell(
-          borderRadius: borderRadius,
-          onTap: () => onSelectPage(item.pageIndex),
-          child: Container(
-            width: 30,
-            height: 30,
-            alignment: Alignment.center,
-            transform: isActive
-                ? Matrix4.translationValues(side == BookTabSide.left ? -2 : 2, 0, 0)
-                : Matrix4.identity(),
+        border: isLast
+            ? null
+            : Border(bottom: BorderSide(color: GolfPalette.line, width: 1)),
+      ),
+      child: InkWell(
+        onTap: () => onSelectPage(item.pageIndex),
+        child: Center(
+          child: Transform.translate(
+            offset: isActive
+                ? Offset(side == BookTabSide.left ? -2 : 2, 0)
+                : Offset.zero,
             child: DefaultTextStyle(
               style: TextStyle(
                 color: isActive ? GolfPalette.surface : GolfPalette.inkSoft,
