@@ -63,11 +63,11 @@ class ScorecardPdfService {
               pw.SizedBox(height: 16),
               pw.Text('Datum: ${_fmtDate(round.date)}'),
               pw.Text(
-                round.holeCount == 9 ? '9-Loch-Runde' : '18-Loch-Runde',
+                round.holeCount == 9 ? '9-Bahnen-Runde' : '18-Bahnen-Runde',
               ),
               pw.SizedBox(height: 16),
               pw.Table.fromTextArray(
-                headers: const ['Loch', 'Par', 'HCP', 'Herren', 'Damen', 'Score'],
+                headers: const ['Bahn', 'Par', 'HCP', 'Herren', 'Damen', 'Score'],
                 data: rows,
                 headerStyle: pw.TextStyle(fontWeight: pw.FontWeight.bold, fontSize: 10),
                 cellStyle: const pw.TextStyle(fontSize: 10),

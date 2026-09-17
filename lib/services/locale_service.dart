@@ -1,6 +1,6 @@
 // Sprachauswahl (Deutsch/Englisch/Niederländisch) + Übersetzungs-Lookup.
 // Zeichengenau portiert aus js/i18n.js der bisherigen Vanilla-JS-App.
-// Lochbeschreibungen/-titel bleiben bewusst nur Deutsch (siehe
+// Bahnbeschreibungen/-titel bleiben bewusst nur Deutsch (siehe
 // lib/content/course_data.dart) – hier geht es nur um die App-Oberfläche.
 //
 // Ergänzt um Keys für das neue Standard-⋮-Menü (Funktionsumfang,
@@ -18,12 +18,12 @@ const Map<String, Map<String, String>> _i18n = {
     'label': 'Deutsch',
     'newRound': 'Neue Runde',
     'existingRounds': 'Bestehende Runden',
-    'heroSub': 'Deine Runde auf dem 9-Loch-Platz',
+    'heroSub': 'Deine Runde auf dem 9-Bahnen-Platz',
     'par': 'Par',
     'hcp': 'HCP',
     'herren': 'Herren',
     'damen': 'Damen',
-    'navHoles': 'Löcher',
+    'navHoles': 'Bahnen',
     'navClubs': 'Schläger',
     'navScorecard': 'Scorecard',
     'navMore': 'Sonstiges',
@@ -36,7 +36,7 @@ const Map<String, Map<String, String>> _i18n = {
     'scorecardTitle': 'Scorecard',
     'frontNine': 'Vordere Neun',
     'backNine': 'Hintere Neun',
-    'hole': 'Loch',
+    'hole': 'Bahn',
     'score': 'Score',
     'scoreNote': 'Werte je Bahn auf Basis der Platzausschilderung vor Ort.',
     'moreTitle': 'Sonstiges',
@@ -58,14 +58,14 @@ const Map<String, Map<String, String>> _i18n = {
     'editClub': 'Schläger bearbeiten',
     'newClub': 'Neuer Schläger',
     'aboutText':
-        'GC Winterberg – 9-Loch-Turnierplatz. Der Platz wird mit zwei Abschlagsätzen (Herren „Schanze“, Damen „Bob“) wie ein 18-Loch-Kurs gespielt. Course Rating/Slope: Herren 70,9/135, Damen 73,6/134 (Par 70).',
+        'GC Winterberg – 9-Bahnen-Turnierplatz. Der Platz wird mit zwei Abschlagsätzen (Herren „Schanze“, Damen „Bob“) wie ein 18-Bahnen-Kurs gespielt. Course Rating/Slope: Herren 70,9/135, Damen 73,6/134 (Par 70).',
     'contactText':
         'Adresse: {address}\nTelefon: {phone}\nE-Mail: {email}\nWeb: {web}',
     'settingsTitle': 'Rundeneinstellungen',
     'settingsSub': 'Lege fest, wie deine Runde gespielt wird.',
     'roundType': 'Rundenlänge',
-    'nineHoleRound': '9-Loch-Runde',
-    'eighteenHoleRound': '18-Loch-Runde',
+    'nineHoleRound': '9-Bahnen-Runde',
+    'eighteenHoleRound': '18-Bahnen-Runde',
     'reportIssueBtn': 'Problem oder Anregung melden',
     'reportIssueTitle': 'Problem oder Anregung melden',
     'reportBug': 'Problem',
@@ -82,6 +82,7 @@ const Map<String, Map<String, String>> _i18n = {
     'featureOverviewTitle': 'Funktionsumfang',
     'knownLimitations': 'Bekannte Einschränkungen',
     'close': 'Schließen',
+    'holeInfo': 'Charakteristik anzeigen',
     'send': 'Versenden',
     'deleteRoundTitle': 'Runde löschen?',
     'deleteRoundBody':
@@ -156,6 +157,7 @@ const Map<String, Map<String, String>> _i18n = {
     'featureOverviewTitle': 'Feature overview',
     'knownLimitations': 'Known limitations',
     'close': 'Close',
+    'holeInfo': 'Show characteristics',
     'send': 'Send',
     'deleteRoundTitle': 'Delete round?',
     'deleteRoundBody': 'This round will be permanently deleted. This cannot be undone.',
@@ -229,6 +231,7 @@ const Map<String, Map<String, String>> _i18n = {
     'featureOverviewTitle': 'Functieoverzicht',
     'knownLimitations': 'Bekende beperkingen',
     'close': 'Sluiten',
+    'holeInfo': 'Kenmerken tonen',
     'send': 'Versturen',
     'deleteRoundTitle': 'Ronde verwijderen?',
     'deleteRoundBody':

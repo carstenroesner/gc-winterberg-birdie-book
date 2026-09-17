@@ -1,5 +1,7 @@
-// Einzelne Loch-Seite im Pager: Lochnummer, Par/HCP, Skizze,
-// Charakteristik-Text, Herren-/Damen-Distanz-Chips. 1:1-Verhalten aus
+// Einzelne Loch-Seite im Pager: Lochnummer, Par/HCP, echtes Bahnenfoto
+// (bereinigt/hochskaliert, siehe PFLICHTENHEFT.md Abschnitt 15),
+// Herren-/Damen-Distanz-Chips sowie ein Info-Button, der den
+// Charakteristik-Text groß in einem Dialog anzeigt. 1:1-Verhalten aus
 // buildHolePage() in js/app.js – physische Lochnummer n (1..18), vordere
 // Neun = "front"-Seite, hintere Neun (n>9) = "back"-Seite derselben Bahn.
 
@@ -9,17 +11,35 @@ import 'package:provider/provider.dart';
 import '../content/course_data.dart';
 import '../services/locale_service.dart';
 import '../theme/golf_palette.dart';
-import 'hole_sketch.dart';
 
 class HolePage extends StatelessWidget {
   final int n;
 
   const HolePage({super.key, required this.n});
 
+  void _showCharacteristicDialog(BuildContext context, LocaleService locale, String text) {
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: Text('${locale.t('hole')} $n'),
+        content: SingleChildScrollView(
+          child: Text(text, style: const TextStyle(fontSize: 17, height: 1.4)),
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(dialogContext).pop(),
+            child: Text(locale.t('close')),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final locale = context.watch<LocaleService>();
-    final holeData = holeForPhysicalNumber(((n - 1) % 9) + 1);
+    final physicalN = ((n - 1) % 9) + 1;
+    final holeData = holeForPhysicalNumber(physicalN);
     final side = n > 9 ? 'back' : 'front';
     final sc = holeData.scorecard;
 
@@ -42,12 +62,24 @@ class HolePage extends StatelessWidget {
                           locale.t('hole'),
                           style: TextStyle(fontSize: 12, color: GolfPalette.inkFaint),
                         ),
-                        Text(
-                          '$n',
-                          style: Theme.of(context)
-                              .textTheme
-                              .displaySmall
-                              ?.copyWith(fontWeight: FontWeight.w700),
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              '$n',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .displaySmall
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.info_outline),
+                              color: GolfPalette.inkSoft,
+                              tooltip: locale.t('holeInfo'),
+                              onPressed: () =>
+                                  _showCharacteristicDialog(context, locale, holeData.text),
+                            ),
+                          ],
                         ),
                       ],
                     ),
@@ -72,12 +104,16 @@ class HolePage extends StatelessWidget {
                 const SizedBox(height: 16),
                 Center(
                   child: ConstrainedBox(
-                    constraints: const BoxConstraints(maxWidth: 220),
-                    child: HoleSketch(physicalHoleNumber: ((n - 1) % 9) + 1),
+                    constraints: const BoxConstraints(maxWidth: 320),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(12),
+                      child: Image.asset(
+                        'assets/holes/bahn$physicalN.png',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
                   ),
                 ),
-                const SizedBox(height: 16),
-                Text(holeData.text, style: Theme.of(context).textTheme.bodyMedium),
                 const SizedBox(height: 16),
                 Row(
                   children: [

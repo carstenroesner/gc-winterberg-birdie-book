@@ -47,7 +47,7 @@ Erster Schritt nach der Start-Auswahl, noch vor Loch 1. Aktuell enthaltene Einst
 ### 3.2 Hauptbildschirm (Lochansicht, „Buchregister"-Design seit 15.09.2026)
 
 - Löcher, Rundeneinstellungen (3.1a) und Scorecard (3.5) sind Seiten eines gemeinsamen **horizontalen Pagers**: Rundeneinstellungen → Loch 1 → … → Loch 9 (bzw. Loch 18 bei 18-Loch-Runde) → Scorecard. Navigation durch **Wischen** nach links/rechts (animiert) oder per Reiter-Direktsprung (siehe unten, ohne Scroll-Animation – wie das Aufschlagen einer Buchseite über einen Register-Reiter).
-- Zeigt je Lochseite eine **individuelle, handgezeichnet wirkende Skizze** der jeweiligen Bahn (Dogleg-Verlauf, Grün/Fahne, Bunker, ggf. Wasser – 9 eigenständige Motive, siehe 10.5), sowie den Charakteristik-Text aus 4a.
+- Zeigt je Lochseite das **echte, bereinigte Foto der Platzausschilderung** dieser Bahn (seit 17.09.2026, siehe Abschnitt 15 – zuvor eine individuelle, handgezeichnet wirkende Skizze, siehe 10.5) sowie einen **Info-Button (i)** neben der Lochnummer, der den Charakteristik-Text aus 4a bei Bedarf groß in einem Dialog anzeigt (nicht mehr dauerhaft auf der Seite sichtbar).
 - **Links** am Bildschirmrand: vertikale Reihe von **Reitern** – oben ein Reiter für die Rundeneinstellungen (Zahnrad-Symbol), darunter Loch 1–9 (vordere Neun) als Direktsprung-Navigation; bei **9-Loch-Runde** zusätzlich ganz unten der Scorecard-Reiter (siehe unten).
 - **Rechts** am Bildschirmrand: bei **18-Loch-Runde** weitere Reiter für Loch 10–18 (hintere Neun), ganz unten der Scorecard-Reiter; bei **9-Loch-Runde** wird die gesamte rechte Spalte **ausgeblendet** (3.1a).
 - **Reiter-Optik („physisches Buch", 15.09.2026):** Jeder Reiter ist eine eigenständige, an der Außenkante abgerundete Fläche mit leichtem Schlagschatten, die wie ein aus dem Buch herausragendes Register wirkt; der aktive Reiter hebt sich farblich ab (Gold) und ragt sichtbar weiter heraus.
@@ -234,7 +234,7 @@ Ideen und Anforderungen, die bewusst **nicht** Teil des ersten Funktionsumfangs 
 - **iCloud-Synchronisation** der Rundendaten zwischen Geräten (vgl. Punkt 9; Start erfolgt zunächst rein lokal).
 - **Mitspieler/Score-Erfassung** für mehrere Spieler in einer Runde (vgl. Punkt 8; Start erfolgt zunächst mit nur einem Spieler).
 - **Schwebende Schläger-Auswahl** direkt im Hauptbildschirm statt eigenem Menü-Bildschirm (siehe 3.4, 11.5).
-- **Neugestaltung der Lochskizzen** (siehe Abschnitt 13) – vier Stil-Entwürfe für Loch 2 liegen als Design-Canvas vor, Entscheidung über die Richtung steht noch aus; mit der sauberen Trennung von Geometrie (`lib/models/hole_sketch_def.dart`, `lib/content/hole_sketch_defs.dart`) und Zeichen-Layer (`lib/widgets/hole_sketch_painter.dart`) seit der Flutter-Migration (Abschnitt 14) ist eine spätere Umsetzung ein reiner Austausch des Zeichen-Layers, ohne die Daten anzufassen.
+- ~~**Neugestaltung der Lochskizzen**~~ – **erledigt (17.09.2026):** anstelle eines Redesigns der handgezeichneten Skizze zeigt die App jetzt die echten, bereinigten Fotos der Platzausschilderung je Bahn (siehe Abschnitt 15). Die vier Design-Canvas-Stilentwürfe aus Abschnitt 13 sowie `lib/widgets/hole_sketch_painter.dart`/`hole_sketch.dart`/`hole_sketch_defs.dart` bleiben unverändert im Repository (nicht mehr referenziert, aber als Grundlage erhalten, falls ein rein illustrativer Stil später doch wieder gewünscht wird).
 - **Pflichtenheft als eigenständig erreichbare Website** (angekündigt vom Nutzer am 15.09.2026, „beim nächsten Bild, jetzt noch nicht nötig"): Das Pflichtenheft soll nicht nur als Datei vorliegen, sondern auch als für den Nutzer erreichbare Webseite/Doku-Seite abrufbar sein. Die Referenz-App spraytattoo_katalog hat kein vergleichbares Vorbild (ihr Pages-Deploy veröffentlicht nur die gebaute App, nicht ihre Doku); mögliche Ansätze für später (noch nicht entschieden): das `.md` direkt über die GitHub-eigene Markdown-Darstellung verlinken, oder eine kleine eigene Doku-Seite generieren. Mit der App-internen „Funktionsumfang"-Seite (siehe 3.3, 14) ist inzwischen zumindest ein Teil dieses Wunsches erfüllt.
 
 ## 9. Umsetzungsstand: Version 0.1 (14.09.2026)
@@ -402,8 +402,55 @@ Bei der Diagnose zeigte sich zusätzlich ein echter (kein Test-)Bug: `ClubsServi
 ### 14.6 Noch zu erledigen
 
 - Logo-Auflösung (Punkt 14 in Abschnitt 6) bleibt unabhängig von der Migration offen.
-- Entscheidung über die Neugestaltung der Lochskizzen (Abschnitt 13, vier Design-Canvas-Entwürfe) bleibt offen und unabhängig von dieser Migration – dank der getrennten Architektur (14.2) jederzeit nachrüstbar.
-- **Test-Anhang (Nutzerwunsch vom 17.09.2026, Umsetzung erst beim nächsten Compile-/Deploy-Zyklus):** Sowohl diesem Pflichtenheft als auch dem In-App-„Funktionsumfang"-Screen (`feature_overview_content.dart`) soll ein Anhang hinzugefügt werden, der die vorhandenen automatisierten Tests (`test/*.dart`, per `flutter test` in der CI ausgeführt) auflistet – je Testdatei die geprüften Fälle. Ausdrücklich noch nicht jetzt umzusetzen, sondern beim nächsten ohnehin anstehenden Code-/Deploy-Zyklus mit zu erledigen.
+- Die Neugestaltung der Lochskizzen (vormals hier vermerkt) ist erledigt – siehe Abschnitt 15.
+- Der Test-Anhang (vormals hier vermerkt) ist erledigt – siehe Abschnitt 16.
+
+---
+
+## 15. Echte Bahnenbilder statt Lochskizze & Info-Button für Charakteristik-Text (umgesetzt am 17.09.2026)
+
+Zwei Nutzerwünsche im Anschluss an die vollständige Datenerfassung aller 9 Bahnen (Abschnitt 5e):
+
+1. Der Charakteristik-Text je Bahn (4a) soll nicht mehr dauerhaft auf der Lochseite stehen, sondern erst nach Antippen eines Info-Buttons (i) groß in einem Dialog erscheinen.
+2. Die 9 hochgeladenen Fotos der Platzausschilderung (Abschnitt 5e) sollen hochskaliert, entrauscht und mit neu gesetztem Text (gleicher Inhalt, gleiche Farbe) versehen werden – und die bisherige handgezeichnete Lochskizze auf der Lochseite ersetzen.
+
+**Umsetzung Info-Button:** In `hole_page.dart` steht neben der Lochnummer jetzt ein `IconButton` (`Icons.info_outline`). Antippen öffnet einen `AlertDialog` mit dem Charakteristik-Text in großer Schrift (17 px); der zuvor immer sichtbare Fließtext unter der Lochgrafik entfällt dafür. Neuer i18n-Schlüssel `holeInfo` (Tooltip) in allen drei Sprachen.
+
+**Umsetzung Bahnenbilder:** Aus den 9 Diagramm-Fotos (die größeren, unkomprimierten PNG-Screenshots je Bahn – nicht die kleineren JPEG-Textseiten-Screenshots) wurde je Bahn ein bereinigtes Bild erzeugt:
+
+- **Zuschnitt:** Handy-Statusleiste und die „golfclub-winterberg.de"-Browserleiste werden weggeschnitten (Grün-Farberkennung findet den vertikalen Bereich der eigentlichen Bahnengrafik automatisch je Bild, da die Screenshots leicht unterschiedliche Scroll-Positionen hatten).
+- **Entrauschen/Hochskalieren:** `cv2.fastNlMeansDenoisingColored` gegen Kompressions-/Screenshot-Artefakte, danach 2×-Hochskalierung mit Lanczos-Filter plus leichtes Nachschärfen (Unsharp-Mask), um die Kantenschärfe der Lanczos-Skalierung wieder auszugleichen.
+- **Text neu gesetzt:** Die beiden informationstragenden Kacheln der Originalgrafik – der schwarze „BAHN/PAR/HCP"-Balken oben rechts und die vierzeilige „HERREN/HERREN/DAMEN/DAMEN"-Distanztabelle unten rechts – werden per Bilderkennung lokalisiert (Konturerkennung auf den charakteristischen Schwarz-/Farbflächen), mit einer sauberen Fläche übermalt und mit denselben Inhalten/Farben (rot/schwarz/grün bzw. Gelb-/Blau-/Rot-/Orange-Chips) neu und scharf gerendert (Schrift: DejaVu Sans Bold), unter Verwendung der in Abschnitt 5e bereits erfassten Werte je Bahn. Die eigentliche Bahnengrafik (Fairway, Bunker, Wasser, Bäume) sowie die kleineren, entlang des Fairways verstreuten Zwischen-Distanzmarken (z. B. „225/213/177/166") bleiben unverändert Teil des bereinigten Fotos – deren Text wurde **nicht** einzeln neu gesetzt, da ihre Position je Bahn variiert und eine zuverlässige automatische Zuordnung den Rahmen dieses Durchgangs gesprengt hätte. Bei Bedarf kann das in einem späteren Schritt ergänzt werden.
+- **Kompression:** finale PNGs mit `pngquant` verlustarm komprimiert (Gesamtgröße aller 9 Bilder ca. 2,5 MB statt ursprünglich 23 MB direkt nach der Hochskalierung).
+
+Die 9 Ergebnisbilder liegen unter `assets/holes/bahn1.png` … `bahn9.png` (in `pubspec.yaml` als Assets deklariert) und ersetzen in `hole_page.dart` die bisherige `HoleSketch`-Widget-Einbindung durch `Image.asset('assets/holes/bahn$physicalN.png')`. Die alten Dateien `lib/widgets/hole_sketch_painter.dart`, `lib/widgets/hole_sketch.dart` und `lib/content/hole_sketch_defs.dart` bleiben unverändert im Repository, werden aber nirgends mehr referenziert.
+
+Neuer Test `test/hole_page_test.dart`: prüft, dass der Charakteristik-Text vor dem Antippen des Info-Buttons nicht auf der Seite steht, nach dem Antippen im Dialog erscheint und nach „Schließen" wieder verschwindet, sowie dass Par/HCP/Herren-/Damen-Werte korrekt angezeigt werden.
+
+Damit ist der langjährige Backlog-Punkt „Neugestaltung der Lochskizzen" (Abschnitte 8, 13) erledigt – statt eines weiteren Illustrationsstils zeigt die App jetzt die authentische Platzausschilderung.
+
+---
+
+## 16. Anhang: Automatisierte Tests (ergänzt am 17.09.2026)
+
+Auf Nutzerwunsch vom 17.09.2026 („beim nächsten Compile[-Zyklus] … Anhang mit den durchgeführten automatisierten Tests") – umgesetzt in diesem, dem nächsten anstehenden Deploy-Zyklus. Alle Tests laufen unter `test/*.dart` per `flutter test` als blockierendes Gate in der CI (Abschnitt 2/14). Je Datei die geprüften Fälle:
+
+| Testdatei | Geprüfte Fälle |
+|---|---|
+| `widget_test.dart` | App zeigt zunächst den Splash und danach den Startbildschirm; „Neue Runde" führt in den Hauptbildschirm (Rundeneinstellungen zuerst). |
+| `hole_page_test.dart` | Charakteristik-Text ist erst nach Tippen auf den Info-Button sichtbar (und nach „Schließen" wieder weg); Lochseite zeigt Par/HCP sowie Herren-/Damen-Distanzen korrekt. |
+| `hole_sketch_defs_test.dart` | Alle 9 Lochskizzen sind im Datensatz vorhanden; alle Fairway-Pfadstrings parsen fehlerfrei und ergeben eine Fläche; `holeSketchForPhysicalNumber` mappt vordere und hintere Neun auf dieselbe Bahn. |
+| `scorecard_page_test.dart` | Alle 9 Bahnen haben einen erfassten Scorecard-Datensatz; Scorecard zeigt für Loch 1 und Loch 9 echte Werte statt Platzhalter; Vorne/Hinten-Umschalter erscheint nur bei mehr als 9 Löchern. |
+| `scorecard_pdf_service_test.dart` | Erzeugt ein gültiges PDF (Magic-Bytes-Header) für eine 18-Loch-Runde mit Scores sowie für eine 9-Loch-Runde ohne Scores. |
+| `rounds_service_test.dart` | Start ohne gespeicherte Runden; `createNewRound` legt eine 18-Loch-Runde an und macht sie aktuell; `setCurrentHoleCount` ändert nur die aktuelle Runde; `setScore` verwendet das Schlüsselformat `front-<n>`/`back-<n>` und entfernt den Eintrag bei `null` wieder; `selectRound` wechselt die aktuelle Runde und persistiert; `deleteRound` entfernt eine Runde endgültig (inkl. Persistenz) und hebt bei der aktuellen Runde die Auswahl auf. |
+| `existing_rounds_screen_test.dart` | Jede gespeicherte Runde trägt ein `Slidable`; Wischen nach links enthüllt die Aktionen „Versenden" und „Löschen" mit korrektem Label. |
+| `clubs_service_test.dart` | Lädt den Standardsatz (12 Schläger), wenn nichts gespeichert ist; `startEdit` erzeugt eine unabhängige Arbeitskopie; `cancelEdit` verwirft alle Änderungen (kritischer Regressionstest); `saveEdit` übernimmt Änderungen, entfernt Zeilen ohne Namen und persistiert; `updateBufferMin`/`Max` können auf `null` gesetzt werden (z. B. beim Putter). |
+| `clubs_screen_test.dart` | „Abbrechen" verwirft Namensänderung und neu hinzugefügte Zeile; „Speichern" übernimmt die Namensänderung dauerhaft. |
+| `locale_service_test.dart` | Default-Sprache ist Deutsch, wenn nichts gespeichert ist; gespeicherte Sprache wird beim Laden übernommen; `setLang` persistiert und benachrichtigt Listener; `t()` fällt für unbekannten Key auf den Key selbst zurück; `tFormat` ersetzt Platzhalter wie `{address}`. |
+| `main_pager_flow_test.dart` | 18-Loch-Runde zeigt zwei Reiterleisten, 9-Loch-Runde nur eine; Tippen auf einen Lochreiter springt sofort (ohne Animation) auf die Lochseite; der Scorecard-Reiter landet auf der letzten Pager-Seite. |
+| `report_issue_dialog_test.dart` | Baut eine korrekte GitHub-„New Issue"-URL für ein „Problem" bzw. eine „Anregung"; die URL enthält niemals ein Zugriffstoken. |
+
+Dieselbe Übersicht ist auch im In-App-„Funktionsumfang"-Screen als eigener Abschnitt hinterlegt (`feature_overview_content.dart`).
 
 ---
 
@@ -439,3 +486,5 @@ Bei der Diagnose zeigte sich zusätzlich ein echter (kein Test-)Bug: `ClubsServi
 - 17.09.2026: Neue Funktion „Runde versenden/löschen" in „Bestehende Runden" umgesetzt (Abschnitt 3.1/5): Swipe nach links auf einer gespeicherten Runde blendet zwei Aktionen ein. „Löschen" entfernt die Runde nach Sicherheitsabfrage endgültig (`RoundsService.deleteRound()`). „Versenden" erzeugt die Scorecard der Runde als PDF (`ScorecardPdfService`, Paket `pdf`, Tabelle mit Loch/Par/HCP/Herren/Damen/Score sowie Score-Summe) und ruft darüber die System-Weiterleitungsfunktion des Geräts auf (Paket `printing`, `Printing.sharePdf` – Share-Sheet unter iOS/Android, Web-Share-API bzw. Datei-Download als Fallback im Browser). Die Swipe-Geste selbst nutzt das Paket `flutter_slidable`. Neue Tests: `deleteRound` in `rounds_service_test.dart`, `scorecard_pdf_service_test.dart` (gültige PDF-Bytes für 9-/18-Loch-Runden), `existing_rounds_screen_test.dart` (Swipe-Aktionen mit korrektem Label im Widget-Baum vorhanden). Bekannte Einschränkung ergänzt: Datei-Share funktioniert je nach Browser/Plattform unterschiedlich, Fallback ist ein normaler Download.
 - 17.09.2026: Nutzer-Wunsch notiert, aber ausdrücklich erst beim nächsten Compile-/Deploy-Zyklus umzusetzen: Test-Anhang mit den vorhandenen automatisierten Tests in Pflichtenheft und Funktionsumfang-Screen (siehe 14.6) – keine Umsetzung in diesem Schritt.
 - 17.09.2026: Nutzer hat Fotos der Vor-Ort-Ausschilderung aller 9 Bahnen sowie der zugehörigen Website-Textseiten hochgeladen. Daraus Par/HCP/Herren-/Damen-Distanzen für die bisher fehlenden 8 Bahnen (Loch 1, 3–9) extrahiert und geprüft (Plausibilitätscheck: ungerade/gerade HCP-Verteilung vorne/hinten stimmig), in `lib/content/course_data.dart` eingetragen (siehe 5e). Charakteristik-Texte gegen die bereits vorhandenen Texte (4a) abgeglichen – keine Abweichungen, keine Textänderung nötig. Damit zeigt die Scorecard für alle 9 Bahnen reale Werte statt „–" (`scoreNote`-Hinweistext in allen 3 Sprachen entsprechend angepasst, `scorecard_page_test.dart` neu geschrieben, „Bekannte Einschränkungen" in `feature_overview_content.dart` um den erledigten Punkt bereinigt). Punkte 3 und 4 in Abschnitt 6 als erledigt markiert.
+- 17.09.2026: Zwei weitere Nutzerwünsche im selben Zug umgesetzt (Abschnitt 15): (1) Der Charakteristik-Text steht nicht mehr dauerhaft auf der Lochseite, sondern erst nach Tippen auf einen neuen Info-Button (i) groß in einem Dialog. (2) Aus den 9 hochgeladenen Diagramm-Fotos wurden bereinigte Bahnenbilder erzeugt (Zuschnitt auf die eigentliche Grafik, Entrauschen, 2×-Hochskalierung, die beiden Info-Kacheln BAHN/PAR/HCP sowie HERREN/DAMEN scharf neu gerendert mit denselben Werten/Farben) und ersetzen auf der Lochseite die bisherige handgezeichnete Skizze (`HoleSketch` durch `Image.asset` ersetzt) – der lange offene Backlog-Punkt „Neugestaltung der Lochskizzen" (Abschnitte 8, 13) ist damit erledigt. Neuer Test `hole_page_test.dart`. Zusätzlich den bereits notierten Test-Anhang umgesetzt (Abschnitt 16, sowohl hier als auch im Funktionsumfang-Screen), da dieser Zyklus ohnehin ein Compile/Deploy war.
+- 17.09.2026: Auf Nutzerwunsch die deutsche App-Oberfläche einheitlich von „Loch"/„Löcher" auf „Bahn"/„Bahnen" umbenannt (u. a. `locale_service.dart` Deutsch-Texte, Charakteristik-Texte in `course_data.dart`, Funktionsumfang-Screen, PDF-Scorecard-Export). Englische/niederländische Übersetzungen ("Hole"/"Holes") bleiben unverändert, da dort bereits der landessprachlich korrekte Golf-Begriff verwendet wird. Interne Dart-Bezeichner (Klassen-/Datei-/Methodennamen wie `Hole`, `HolePage`, `holeForPhysicalNumber`) wurden bewusst nicht umbenannt, da rein intern und ohne Auswirkung auf die App-Oberfläche. Betroffener Test `main_pager_flow_test.dart` angepasst.

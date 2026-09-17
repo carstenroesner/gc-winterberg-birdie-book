@@ -23,7 +23,7 @@ const CourseInfo courseInfo = CourseInfo(
   },
 );
 
-// 9 Bahnen, jeweils mit vorderem (n) und hinterem (n+9) Loch.
+// 9 Bahnen, jeweils von vorderem (n) und hinterem (n+9) Abschlag gespielt.
 const List<Hole> holes = [
   Hole(
     n: 1,
@@ -57,7 +57,7 @@ const List<Hole> holes = [
     n: 3,
     title: 'Kurze Distanz',
     text:
-        'Das dritte Loch ist das kürzeste auf dem Platz. Ein mittleres bis kurzes Eisen wird empfohlen für den Schlag bis zum Grün. Genauigkeit ist wichtig, da die Distanz zur Ausgrenze sehr kurz ist.',
+        'Die dritte Bahn ist die kürzeste auf dem Platz. Ein mittleres bis kurzes Eisen wird empfohlen für den Schlag bis zum Grün. Genauigkeit ist wichtig, da die Distanz zur Ausgrenze sehr kurz ist.',
     refImage:
         'https://golfclub-winterberg.de/wp-content/uploads/2017/05/csm_bahn3_8d81eb7245-157x300.gif',
     scorecard: HoleScorecard(
@@ -71,7 +71,7 @@ const List<Hole> holes = [
     n: 4,
     title: 'Das Wasser überbrücken',
     text:
-        'Der Abschlag zum vierten Loch sollte sehr nach links angehalten werden, da das Fairway zur rechten Seite hin sehr schräg wird. Ein langer zweiter Schlag ist wichtig, um das Wasser vor dem Grün zu überbrücken.',
+        'Der Abschlag zur vierten Bahn sollte sehr nach links angehalten werden, da das Fairway zur rechten Seite hin sehr schräg wird. Ein langer zweiter Schlag ist wichtig, um das Wasser vor dem Grün zu überbrücken.',
     refImage:
         'https://golfclub-winterberg.de/wp-content/uploads/2017/05/csm_bahn4_d8eedc6d3f-147x300.gif',
     scorecard: HoleScorecard(
@@ -85,7 +85,7 @@ const List<Hole> holes = [
     n: 5,
     title: 'Es geht bergauf',
     text:
-        'Am fünften Loch geht es bergauf. Beim Abschlag sollte man sich links halten, da auf der rechten Seite der tiefste Bunker des Platzes liegt.',
+        'An der fünften Bahn geht es bergauf. Beim Abschlag sollte man sich links halten, da auf der rechten Seite der tiefste Bunker des Platzes liegt.',
     refImage:
         'https://golfclub-winterberg.de/wp-content/uploads/2017/05/csm_bahn5_2ee2031a40-157x300.gif',
     scorecard: HoleScorecard(
@@ -113,7 +113,7 @@ const List<Hole> holes = [
     n: 7,
     title: '400 Meter – 4 Schläge',
     text:
-        'Das siebte Loch ist das schwierigste des Platzes. Gut 400 Meter müssen überbrückt werden. Am idealsten geht der erste Schlag schräg in die linke Fairway-Hälfte. Nach etwa 225 Metern vom ersten Abschlag aus liegt ein Graben. Das Grün wird von zwei Bunkern geschützt.',
+        'Die siebte Bahn ist die schwierigste des Platzes. Gut 400 Meter müssen überbrückt werden. Am idealsten geht der erste Schlag schräg in die linke Fairway-Hälfte. Nach etwa 225 Metern vom ersten Abschlag aus liegt ein Graben. Das Grün wird von zwei Bunkern geschützt.',
     refImage:
         'https://golfclub-winterberg.de/wp-content/uploads/2017/05/csm_bahn7_27d9cd6e84-157x300.gif',
     scorecard: HoleScorecard(
@@ -127,7 +127,7 @@ const List<Hole> holes = [
     n: 8,
     title: "Hier geht's bergauf",
     text:
-        "Ganze 183 Meter den Berg hinauf muss der Ball an Loch 8 geschlagen werden. Der Abschlag sollte hier sehr gerade und lang genug sein. Rechts und links des Grüns sind große Bunker. Das Grün hat eine große Stufe (McKenzie-Grün).",
+        "Ganze 183 Meter den Berg hinauf muss der Ball auf Bahn 8 geschlagen werden. Der Abschlag sollte hier sehr gerade und lang genug sein. Rechts und links des Grüns sind große Bunker. Das Grün hat eine große Stufe (McKenzie-Grün).",
     refImage:
         'https://golfclub-winterberg.de/wp-content/uploads/2017/05/csm_bahn8_34e02e8bf2-158x300.gif',
     scorecard: HoleScorecard(
@@ -153,6 +153,6 @@ const List<Hole> holes = [
   ),
 ];
 
-/// Liefert das [Hole] für die physische Lochnummer (1..9) unabhängig davon,
-/// ob es als vorderes (n) oder hinteres (n+9) Loch gespielt wird.
+/// Liefert das [Hole] für die physische Bahnnummer (1..9) unabhängig davon,
+/// ob sie als vordere (n) oder hintere (n+9) Bahn gespielt wird.
 Hole holeForPhysicalNumber(int physicalN) => holes[(physicalN - 1) % 9];

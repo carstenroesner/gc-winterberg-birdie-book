@@ -68,7 +68,7 @@ void main() {
     // im Gegensatz zum Wischen, das animiert.
     await tester.pump();
 
-    expect(find.text('Loch 5'), findsOneWidget);
+    expect(find.text('Bahn 5'), findsOneWidget);
   });
 
   testWidgets('Scorecard-Reiter landet auf der letzten Pager-Seite', (tester) async {
