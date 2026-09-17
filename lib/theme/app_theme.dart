@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import 'golf_palette.dart';
 
@@ -8,8 +7,17 @@ import 'golf_palette.dart';
 /// bisherigen Vanilla-JS-App (siehe [GolfPalette]): warmes Creme als
 /// Hintergrund, dunkles Grün als Primärfarbe, Gold als Akzent, Manrope als
 /// Fließtext-Schrift, Cormorant Garamond für Überschriften/große Zahlen.
+///
+/// Beide Schriften liegen als lokale Assets unter `assets/fonts/` und werden
+/// über `pubspec.yaml` gebündelt (statt per `google_fonts`-Paket zur
+/// Laufzeit von Googles CDN geladen zu werden) – das erste Deploy zeigte auf
+/// mobilen Verbindungen einen sichtbaren Fallback-auf-Systemschrift-Moment,
+/// solange der externe Font-Download noch lief.
 class AppTheme {
   AppTheme._();
+
+  static const String _bodyFont = 'Manrope';
+  static const String _displayFontFamily = 'Cormorant Garamond';
 
   static ThemeData light() {
     final colorScheme = ColorScheme.fromSeed(
@@ -21,23 +29,28 @@ class AppTheme {
       error: GolfPalette.danger,
     );
 
-    final baseTextTheme = GoogleFonts.manropeTextTheme();
-    final displayFont = GoogleFonts.cormorantGaramondTextTheme();
+    final baseTextTheme = Typography.material2021(platform: TargetPlatform.android)
+        .black
+        .apply(fontFamily: _bodyFont);
+
+    TextStyle? display(TextStyle? style, FontWeight weight) =>
+        style?.copyWith(fontFamily: _displayFontFamily, fontWeight: weight);
 
     final textTheme = baseTextTheme.copyWith(
-      displayLarge: displayFont.displayLarge?.copyWith(fontWeight: FontWeight.w700),
-      displayMedium: displayFont.displayMedium?.copyWith(fontWeight: FontWeight.w700),
-      displaySmall: displayFont.displaySmall?.copyWith(fontWeight: FontWeight.w700),
-      headlineLarge: displayFont.headlineLarge?.copyWith(fontWeight: FontWeight.w700),
-      headlineMedium: displayFont.headlineMedium?.copyWith(fontWeight: FontWeight.w700),
-      headlineSmall: displayFont.headlineSmall?.copyWith(fontWeight: FontWeight.w600),
-      titleLarge: displayFont.titleLarge?.copyWith(fontWeight: FontWeight.w600),
+      displayLarge: display(baseTextTheme.displayLarge, FontWeight.w700),
+      displayMedium: display(baseTextTheme.displayMedium, FontWeight.w700),
+      displaySmall: display(baseTextTheme.displaySmall, FontWeight.w700),
+      headlineLarge: display(baseTextTheme.headlineLarge, FontWeight.w700),
+      headlineMedium: display(baseTextTheme.headlineMedium, FontWeight.w700),
+      headlineSmall: display(baseTextTheme.headlineSmall, FontWeight.w600),
+      titleLarge: display(baseTextTheme.titleLarge, FontWeight.w600),
     );
 
     return ThemeData(
       useMaterial3: true,
       colorScheme: colorScheme,
       scaffoldBackgroundColor: GolfPalette.bg,
+      fontFamily: _bodyFont,
       textTheme: textTheme,
       appBarTheme: AppBarTheme(
         backgroundColor: GolfPalette.bg,
