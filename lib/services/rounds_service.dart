@@ -19,6 +19,12 @@ class RoundsService extends ChangeNotifier {
   String? _currentRoundId;
   bool _loaded = false;
 
+  /// Monotoner Zähler als Kollisionsschutz für [createNewRound]: reines
+  /// `DateTime.now().millisecondsSinceEpoch` kann bei zwei Aufrufen
+  /// innerhalb derselben Millisekunde (z. B. in Tests ohne Verzögerung
+  /// zwischen den Aufrufen) identische IDs erzeugen.
+  int _idCounter = 0;
+
   List<Round> get rounds => List.unmodifiable(_rounds);
   bool get isLoaded => _loaded;
   String? get currentRoundId => _currentRoundId;
@@ -73,7 +79,7 @@ class RoundsService extends ChangeNotifier {
   /// Legt eine neue Runde an (Default 18-Loch, heutiges Datum) und macht
   /// sie zur aktuellen Runde. Entspricht `createNewRound()` in js/app.js.
   Future<Round> createNewRound() async {
-    final id = 'r${DateTime.now().millisecondsSinceEpoch}';
+    final id = 'r${DateTime.now().millisecondsSinceEpoch}_${_idCounter++}';
     final round = Round(
       id: id,
       date: DateTime.now(),
