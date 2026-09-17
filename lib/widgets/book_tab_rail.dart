@@ -1,10 +1,11 @@
 // "Buchregister"-Reiterleiste (links: Zahnrad + Löcher 1-9 [+ Scorecard bei
 // 9-Loch-Runde]; rechts: Löcher 10-18 + Scorecard bei 18-Loch-Runde).
 // Nachbau von renderHoleColumns()/holeListItem()/settingsListItem()/
-// scorecardListItem() aus js/app.js: die Reiter bilden EINE durchgehende,
-// flächige Leiste (nur die äußeren Enden abgerundet, dünne Trennlinien
-// zwischen den Zellen), die sich gleichmäßig über die volle Höhe verteilt;
-// der aktive Reiter hebt sich per Gold-Farbe ab und "poppt" leicht heraus.
+// scorecardListItem() aus js/app.js: einzelne, ringsum abgerundete
+// "Karteikarten"-Reiter mit schmalen Zwischenräumen, die sich gleichmäßig
+// über die volle Höhe verteilen; der aktive Reiter hebt sich per Gold-Farbe
+// ab, ist breiter als die übrigen und "poppt" so sichtbar in Richtung
+// Seiteninhalt heraus (Referenz-Screenshot des Nutzers vom 17.09.2026).
 
 import 'package:flutter/material.dart';
 
@@ -37,6 +38,9 @@ class BookTabRail extends StatelessWidget {
   final int activePage;
   final ValueChanged<int> onSelectPage;
 
+  static const double _baseWidth = 30;
+  static const double _activeExtraWidth = 10;
+
   const BookTabRail({
     super.key,
     required this.side,
@@ -47,68 +51,63 @@ class BookTabRail extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final outerRadius = const Radius.circular(10);
-    final borderRadius = side == BookTabSide.left
-        ? BorderRadius.only(topLeft: outerRadius, bottomLeft: outerRadius)
-        : BorderRadius.only(topRight: outerRadius, bottomRight: outerRadius);
-
     return SizedBox(
-      width: 30,
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: Material(
-          color: GolfPalette.surface,
-          elevation: 2,
-          child: Column(
-            mainAxisSize: MainAxisSize.max,
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              for (var i = 0; i < items.length; i++)
-                Expanded(
-                  child: _buildTab(context, items[i], isLast: i == items.length - 1),
-                ),
-            ],
-          ),
-        ),
+      width: _baseWidth + _activeExtraWidth,
+      child: Column(
+        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment:
+            side == BookTabSide.left ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+        children: [
+          for (final item in items)
+            Expanded(
+              child: _buildTab(context, item),
+            ),
+        ],
       ),
     );
   }
 
-  Widget _buildTab(BuildContext context, BookTabItem item, {required bool isLast}) {
+  Widget _buildTab(BuildContext context, BookTabItem item) {
     final isActive = item.pageIndex == activePage;
+    final radius = BorderRadius.circular(10);
 
     final label = switch (item.kind) {
-      BookTabKind.settings => const Icon(Icons.settings, size: 15),
-      BookTabKind.scorecard => const Icon(Icons.table_chart_outlined, size: 15),
+      BookTabKind.settings => Icon(Icons.settings, size: isActive ? 17 : 15),
+      BookTabKind.scorecard =>
+        Icon(Icons.table_chart_outlined, size: isActive ? 17 : 15),
       BookTabKind.hole => Text(
           '${item.holeNumber}',
-          style: const TextStyle(fontSize: 12, fontWeight: FontWeight.w700),
+          style: TextStyle(
+            fontSize: isActive ? 15 : 12,
+            fontWeight: FontWeight.w700,
+          ),
         ),
     };
 
-    return DecoratedBox(
-      decoration: BoxDecoration(
-        color: isActive ? GolfPalette.gold : GolfPalette.surface,
-        border: isLast
-            ? null
-            : Border(bottom: BorderSide(color: GolfPalette.line, width: 1)),
-      ),
-      child: InkWell(
-        onTap: () => onSelectPage(item.pageIndex),
-        child: Center(
-          child: Transform.translate(
-            offset: isActive
-                ? Offset(side == BookTabSide.left ? -2 : 2, 0)
-                : Offset.zero,
-            child: DefaultTextStyle(
-              style: TextStyle(
-                color: isActive ? GolfPalette.surface : GolfPalette.inkSoft,
-              ),
-              child: IconTheme(
-                data: IconThemeData(
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 3),
+      child: Container(
+        width: isActive ? _baseWidth + _activeExtraWidth : _baseWidth,
+        alignment: side == BookTabSide.left ? Alignment.centerLeft : Alignment.centerRight,
+        child: Material(
+          color: isActive ? GolfPalette.gold : GolfPalette.surface,
+          elevation: isActive ? 4 : 1,
+          shadowColor: GolfPalette.ink.withOpacity(0.35),
+          borderRadius: radius,
+          child: InkWell(
+            borderRadius: radius,
+            onTap: () => onSelectPage(item.pageIndex),
+            child: Center(
+              child: DefaultTextStyle(
+                style: TextStyle(
                   color: isActive ? GolfPalette.surface : GolfPalette.inkSoft,
                 ),
-                child: label,
+                child: IconTheme(
+                  data: IconThemeData(
+                    color: isActive ? GolfPalette.surface : GolfPalette.inkSoft,
+                  ),
+                  child: label,
+                ),
               ),
             ),
           ),
