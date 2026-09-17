@@ -74,4 +74,33 @@ void main() {
     expect(reloaded.currentRoundId, r1.id);
     expect(reloaded.rounds.length, 2);
   });
+
+  test('deleteRound entfernt eine Runde endgültig und persistiert das', () async {
+    final service = RoundsService();
+    await service.load();
+    final r1 = await service.createNewRound();
+    final r2 = await service.createNewRound();
+
+    await service.deleteRound(r1.id);
+
+    expect(service.rounds.length, 1);
+    expect(service.rounds.first.id, r2.id);
+
+    final reloaded = RoundsService();
+    await reloaded.load();
+    expect(reloaded.rounds.length, 1);
+    expect(reloaded.rounds.first.id, r2.id);
+  });
+
+  test('deleteRound der aktuellen Runde hebt die Auswahl auf', () async {
+    final service = RoundsService();
+    await service.load();
+    final round = await service.createNewRound();
+    expect(service.currentRoundId, round.id);
+
+    await service.deleteRound(round.id);
+
+    expect(service.currentRoundId, isNull);
+    expect(service.currentRound, isNull);
+  });
 }

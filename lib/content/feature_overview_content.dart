@@ -25,6 +25,7 @@ const List<FeatureSection> featureOverviewSections = [
     points: [
       'Wahl zwischen "Neue Runde" und "Bestehende Runden".',
       '"Bestehende Runden" zeigt eine Verlaufsliste bereits gespeicherter Runden zur Auswahl.',
+      'Jede gespeicherte Runde lässt sich nach links wischen, um sie zu löschen oder als PDF-Scorecard über die System-Weiterleitungsfunktion des Geräts zu versenden (z. B. WhatsApp oder E-Mail).',
       'Sprachauswahl (Deutsch/Englisch/Niederländisch) per Flaggen-Zeile.',
     ],
   ),
@@ -79,4 +80,5 @@ const List<String> featureOverviewKnownLimitations = [
   'Der Stil der Lochskizzen ist noch nicht final entschieden; der aktuelle Stil ist ein 1:1-Port der bisherigen Version, ein Redesign wird separat vorbereitet.',
   'Die Schläger-Verwaltung erlaubt aktuell nur eine Sammel-Bearbeitung (Bulk-Edit), keinen Dialog pro einzelnem Schläger.',
   'Es gibt noch keine "schwebende" Schläger-Auswahl direkt im Hauptbildschirm – Schläger bleiben vorerst ein eigener Bildschirm.',
+  'Das Versenden der PDF-Scorecard nutzt die System-Weiterleitungsfunktion des Geräts (Web-Share-API bzw. natives Share-Sheet). Auf Plattformen/Browsern ohne Datei-Share (z. B. viele Desktop-Browser) wird die PDF-Datei stattdessen automatisch heruntergeladen.',
 ];

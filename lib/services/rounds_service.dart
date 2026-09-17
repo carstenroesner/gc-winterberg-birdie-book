@@ -94,6 +94,19 @@ class RoundsService extends ChangeNotifier {
     await _persistCurrent();
   }
 
+  /// Löscht eine gespeicherte Runde endgültig (per Swipe-Aktion in
+  /// "Bestehende Runden", siehe Abschnitt 3.1 im Pflichtenheft). War es die
+  /// aktuell ausgewählte Runde, wird die Auswahl aufgehoben.
+  Future<void> deleteRound(String id) async {
+    _rounds = _rounds.where((r) => r.id != id).toList();
+    if (_currentRoundId == id) {
+      _currentRoundId = null;
+    }
+    notifyListeners();
+    await _persistRounds();
+    await _persistCurrent();
+  }
+
   Future<void> setCurrentHoleCount(int holeCount) async {
     await _updateCurrentRound((r) => r.copyWith(holeCount: holeCount));
   }

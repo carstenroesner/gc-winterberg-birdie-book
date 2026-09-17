@@ -83,6 +83,11 @@ const Map<String, Map<String, String>> _i18n = {
     'featureOverviewTitle': 'Funktionsumfang',
     'knownLimitations': 'Bekannte Einschränkungen',
     'close': 'Schließen',
+    'send': 'Versenden',
+    'deleteRoundTitle': 'Runde löschen?',
+    'deleteRoundBody':
+        'Diese Runde wird endgültig gelöscht. Das kann nicht rückgängig gemacht werden.',
+    'shareError': 'Die Runde konnte nicht zum Versenden vorbereitet werden.',
   },
   'en': {
     'flag': '🇬🇧',
@@ -153,6 +158,10 @@ const Map<String, Map<String, String>> _i18n = {
     'featureOverviewTitle': 'Feature overview',
     'knownLimitations': 'Known limitations',
     'close': 'Close',
+    'send': 'Send',
+    'deleteRoundTitle': 'Delete round?',
+    'deleteRoundBody': 'This round will be permanently deleted. This cannot be undone.',
+    'shareError': 'The round could not be prepared for sending.',
   },
   'nl': {
     'flag': '🇳🇱',
@@ -223,6 +232,11 @@ const Map<String, Map<String, String>> _i18n = {
     'featureOverviewTitle': 'Functieoverzicht',
     'knownLimitations': 'Bekende beperkingen',
     'close': 'Sluiten',
+    'send': 'Versturen',
+    'deleteRoundTitle': 'Ronde verwijderen?',
+    'deleteRoundBody':
+        'Deze ronde wordt definitief verwijderd. Dit kan niet ongedaan worden gemaakt.',
+    'shareError': 'De ronde kon niet worden voorbereid om te versturen.',
   },
 };
 
