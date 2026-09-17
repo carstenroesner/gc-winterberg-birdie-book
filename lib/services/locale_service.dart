@@ -38,8 +38,7 @@ const Map<String, Map<String, String>> _i18n = {
     'backNine': 'Hintere Neun',
     'hole': 'Loch',
     'score': 'Score',
-    'scoreNote':
-        'Beispielwerte für Loch 2 auf Basis der Platzausschilderung. Übrige Lochdaten folgen.',
+    'scoreNote': 'Werte je Bahn auf Basis der Platzausschilderung vor Ort.',
     'moreTitle': 'Sonstiges',
     'about': 'Über',
     'aboutSub': 'GC Winterberg & die App',
@@ -114,8 +113,7 @@ const Map<String, Map<String, String>> _i18n = {
     'backNine': 'Back Nine',
     'hole': 'Hole',
     'score': 'Score',
-    'scoreNote':
-        'Sample values for hole 2 from the on-course signage. Remaining hole data to follow.',
+    'scoreNote': 'Values per hole from the on-course signage.',
     'moreTitle': 'More',
     'about': 'About',
     'aboutSub': 'GC Winterberg & the app',
@@ -188,8 +186,7 @@ const Map<String, Map<String, String>> _i18n = {
     'backNine': 'Tweede negen',
     'hole': 'Hole',
     'score': 'Score',
-    'scoreNote':
-        'Voorbeeldwaarden voor hole 2 op basis van de bebording op de baan. Overige holegegevens volgen.',
+    'scoreNote': 'Waarden per hole op basis van de bebording op de baan.',
     'moreTitle': 'Meer',
     'about': 'Over ons',
     'aboutSub': 'GC Winterberg & de app',

@@ -8,9 +8,10 @@ class SideValues {
 }
 
 /// Scorecard-Referenzdaten eines Lochs (Par, HCP, Abschlagsdistanzen).
-/// Nullable auf `Hole.scorecard`, da aktuell nur für Loch 2/11 echte Daten
-/// vorliegen (siehe PFLICHTENHEFT.md) – für die übrigen 8 Löcher bewusst
-/// `null`, nicht erfunden.
+/// Liegt seit dem 17.09.2026 für alle 9 Bahnen vollständig vor (Quelle:
+/// Platzausschilderung, siehe PFLICHTENHEFT.md). Bleibt nullable auf
+/// `Hole.scorecard`, falls künftig weitere Bahnen hinzukommen sollten, deren
+/// Daten noch nicht erfasst sind.
 class HoleScorecard {
   final int par;
   final SideValues hcp;

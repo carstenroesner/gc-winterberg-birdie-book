@@ -81,7 +81,7 @@ Der Distanzbereich ist je Schläger mit einem Default-Wert vorbelegt (Richtwerte
 
 ### 3.5 Bereich „Scorecard"
 
-Automatisch generierte Golf-Scorecard mit den Daten der Winterberger Löcher – als eigener **Reiter** (3.2) am Ende der jeweils aktiven Spalte: unter Loch 9, wenn die Runde als 9-Loch-Runde eingestellt ist, unter Loch 18 bei einer 18-Loch-Runde (Wunsch des Nutzers vom 15.09.2026). Bei **18-Loch-Runde** zeigt ein Vorne/Hinten-Umschalter wahlweise die vordere oder hintere Neun; bei **9-Loch-Runde** entfällt dieser Umschalter, es werden direkt die 9 Löcher angezeigt. Konkrete Inhalte (Par, Index/Handicap-Vorgabe, Distanzen je Abschlag usw.) liegen laut Auftraggeber noch nicht vollständig vor und werden nachgereicht (siehe Abschnitt 6, Punkt 3/4).
+Automatisch generierte Golf-Scorecard mit den Daten der Winterberger Löcher – als eigener **Reiter** (3.2) am Ende der jeweils aktiven Spalte: unter Loch 9, wenn die Runde als 9-Loch-Runde eingestellt ist, unter Loch 18 bei einer 18-Loch-Runde (Wunsch des Nutzers vom 15.09.2026). Bei **18-Loch-Runde** zeigt ein Vorne/Hinten-Umschalter wahlweise die vordere oder hintere Neun; bei **9-Loch-Runde** entfällt dieser Umschalter, es werden direkt die 9 Löcher angezeigt. Konkrete Inhalte (Par, HCP je Neun, Distanzen für Herren-/Damen-Abschlag) liegen seit dem 17.09.2026 für alle 9 Bahnen vollständig vor (Quelle: Vor-Ort-Ausschilderung, siehe Abschnitt 6, Punkt 3/4).
 
 ## 4. Daten & Assets
 
@@ -91,8 +91,8 @@ Automatisch generierte Golf-Scorecard mit den Daten der Winterberger Löcher –
 | Lochbild Loch 1 | Referenzgrafik von der Vereins-Website vorhanden (siehe 4a); eigenes Foto steht noch aus |
 | Lochbilder Loch 2–9 | vorhanden (Projekt-Dateien Loch2.jpeg–Loch9.jpeg), zusätzlich Referenzgrafiken der Website (4a) |
 | Charakteristik-Texte je Loch | vorhanden, siehe 4a (Quelle: Vereins-Website) |
-| Distanzen/Abschläge je Loch (vorne 9 + hinten 9) | teilweise offen – Website liefert keine Tabelle; aus Vor-Ort-Ausschilderung (Beispiel Loch 2, siehe 5a) ableitbar, sofern Fotos aller 9 Tafeln vorliegen |
-| Scorecard-Inhalte (Par, Index, HCP-Vorgabe) | teilweise offen – Course Rating/Slope/Par je Abschlag für den Gesamtplatz jetzt bekannt (siehe Abschnitt 1 und 5c); Werte je Loch weiterhin über Ausschilderung/Verein zu beschaffen |
+| Distanzen/Abschläge je Loch (vorne 9 + hinten 9) | **vollständig vorhanden** seit 17.09.2026 – aus Fotos der Vor-Ort-Ausschilderung aller 9 Bahnen (siehe 5a, 5e) |
+| Scorecard-Inhalte (Par, Index, HCP-Vorgabe) | **vollständig vorhanden** – Course Rating/Slope/Par je Abschlag für den Gesamtplatz (Abschnitt 1, 5c) sowie Par/HCP je Bahn (vorne/hinten, siehe 5e) seit 17.09.2026 komplett erfasst |
 | Vorgabewirksame Tabelle (DGV-STV → DGV-SPV, Gelb Herren/Rot Damen) | vorhanden (vom Nutzer als Bild bereitgestellt, siehe 5c) |
 | Schläger-Standardsatz (Inhalt + Default-Distanzbereiche) | vorhanden, siehe 4b |
 | Inhalte „Über" | Basisdaten jetzt vorhanden (Adresse, Kontakt, Course Rating/Slope, Greenfee, Abschlag-Namen „Schanze"/„Bob" – siehe Abschnitt 1); vorherige App als Vorbild weiterhin offen |
@@ -184,14 +184,32 @@ Diese Werte ersetzen/präzisieren die zuvor von der Website übernommenen, abwei
 
 Für die Default-Distanzbereiche in 4b wurde recherchiert, welche Schlagweiten für einen Golfer mit hohem Handicap (Kategorie „High Handicap/Anfänger", die vom Nutzer genannte Referenz „HCP 36" liegt in dieser Kategorie) üblich sind. Quelle: [Average Golf Club Distances For High, Middle And Low HCP in METERS – Clevergolfer](https://www.clevergolfer.com/blog/average-golf-club-distances-for-high-middle-and-low-handicap-in-meters) (Werte für Herren, „High Handicap"-Kategorie, dort auf einzelne Meterwerte statt Bereiche angegeben; für die App wurde daraus je Schläger ein plausibler Bereich gebildet, siehe 4b). Es handelt sich um allgemeine Richtwerte, keine für den Nutzer oder den Platz Winterberg spezifisch gemessenen Daten.
 
+## 5e. Vollständige Scorecard-Daten aller 9 Bahnen (Nutzer-Fotos, 17.09.2026)
+
+Der Nutzer hat Fotos der Vor-Ort-Ausschilderung sowie der zugehörigen Website-Textseiten für alle 9 Bahnen hochgeladen (vgl. 5a, wo dies anhand von Loch 2 als Beispiel bereits vermutet wurde). Daraus wurden Par, HCP (getrennt vordere/hintere Neun) sowie die Abschlagdistanzen für Herren (Gelb/Blau) und Damen (Rot/Orange) je Bahn extrahiert und in `lib/content/course_data.dart` eingetragen:
+
+| Bahn | Par | HCP (vorne/hinten) | Herren (vorne/hinten, m) | Damen (vorne/hinten, m) |
+|---|---|---|---|---|
+| 1/10 | 4 | 3/4 | 397/392 | 364/364 |
+| 2/11 | 5 | 11/12 | 450/438 | 406/395 |
+| 3/12 | 3 | 17/18 | 154/137 | 151/137 |
+| 4/13 | 4 | 9/10 | 323/305 | 291/251 |
+| 5/14 | 3 | 13/14 | 169/148 | 164/148 |
+| 6/15 | 5 | 7/8 | 477/456 | 437/420 |
+| 7/16 | 4 | 1/2 | 403/391 | 355/344 |
+| 8/17 | 3 | 5/6 | 183/175 | 150/150 |
+| 9/18 | 4 | 15/16 | 259/227 | 247/227 |
+
+Die HCP-Werte bestätigen sich gegenseitig als plausibel: die vordere Neun vergibt ausschließlich die ungeraden HCP-Indizes 1–17, die hintere Neun ausschließlich die geraden 2–18 – wie beim GC Winterberg zu erwarten, da der 9-Loch-Platz für eine 18-Loch-Wertung zweimal mit unterschiedlichen Abschlägen gespielt wird. Die zu den Fotos gehörenden Charakteristik-Texte wurden mit den bereits in 4a hinterlegten Texten abgeglichen und stimmen überein – hier war keine Änderung nötig. Damit sind die Punkte 3 und 4 aus Abschnitt 6 vollständig erledigt; der bisherige Platzhalter „–" in der Scorecard (siehe 3.5, 14.5) entfällt für alle Bahnen.
+
 ## 6. Offene Punkte / noch zu klärende Fragen
 
 Diese Punkte sollten vor bzw. spätestens bei Ausführungsstart geklärt sein:
 
 1. ~~**Logo-Datei**~~ – erledigt (liegt vor).
 2. **Loch-1-Bild in hoher Auflösung** – eigenes Foto steht noch aus (Website-Referenzgrafik als Übergangslösung vorhanden, siehe 4a).
-3. ~~**Genaue Distanz-/Abschlagdaten** je Loch~~ – **geklärt:** Datenquelle ist die Scorecard/Ausschilderung vor Ort an jedem Loch (vgl. Beispiel Loch 2 in 5a). Noch zu tun: Fotos der übrigen 8 Tafeln (Loch 1, 3–9) nachreichen, damit alle Distanz-/Par-/HCP-Werte erfasst werden können.
-4. **Scorecard-Inhalte je Loch** – welche Spalten/Werte genau (Par, Stableford-Index, Vorgabe-relevante Felder je Loch)? Course Rating/Slope/Par je Abschlag für den Gesamtplatz sind jetzt bekannt (siehe 5c), Werte pro Loch fehlen noch.
+3. ~~**Genaue Distanz-/Abschlagdaten** je Loch~~ – **erledigt (17.09.2026):** Fotos der Ausschilderung aller 9 Bahnen liegen vor, Datenquelle war die Scorecard/Ausschilderung vor Ort an jedem Loch (siehe 5e).
+4. ~~**Scorecard-Inhalte je Loch**~~ – **erledigt (17.09.2026):** Par, HCP je Neun sowie Herren-/Damen-Distanzen für alle 9 Bahnen erfasst (siehe 5e); Course Rating/Slope/Par je Abschlag für den Gesamtplatz war bereits zuvor bekannt (siehe 5c).
 5. ~~**Schläger-Standardsatz**~~ – **geklärt:** Vorschlag bestätigt als Default; Nutzer kann Schläger hinzufügen/editieren, inkl. editierbarem Distanzbereich je Schläger (siehe 3.4, 4b, 5d).
 6. **Inhalte „Über" und „Kontakt"** – Basisdaten jetzt vorhanden (Adresse, Telefon, E-Mail, Course Rating/Slope, Greenfee, Abschlag-Namen, siehe Abschnitt 1); seit 16.09.2026 in einem gemeinsamen „Über diese App"-Dialog zusammengeführt (siehe 3.3).
 7. ~~**Skizzenerstellung**~~ – **geklärt/umgesetzt (15.09.2026):** Stilvorgabe kam vom Nutzer als handgezeichnete Referenzskizze (siehe 10.5); 9 individuelle SVG-Skizzen (eine je Bahn, vordere/hintere Neun teilen sich dieselbe Form) sind implementiert und 1:1 nach Flutter portiert (siehe 14). Eine mögliche Neugestaltung (Abschnitt 13) bleibt ein offener, unabhängiger Folgeschritt.
@@ -419,3 +437,5 @@ Bei der Diagnose zeigte sich zusätzlich ein echter (kein Test-)Bug: `ClubsServi
 - 17.09.2026: Nutzer-Feinschliff zur Reiterleiste: die Verteilung war zwar korrekt, die einzelnen Reiter sollten aber als eine durchgehende, flächige Leiste aneinanderschließen (statt einzelner Kacheln mit Zwischenraum), zusätzlich unten 5 % der Bildschirmhöhe Sicherheitsabstand, da die abgerundete Display-Ecke des iPhone Pro den untersten Reiter sonst stört. Fix: `BookTabRail` von `spaceBetween`-verteilten einzelnen `Material`-Kacheln auf eine einzige `ClipRRect`/`Material`-Hülle mit nur außen abgerundeten Ecken umgestellt, darin eine `Column` aus `Expanded`-Zellen mit dünnen Trennlinien zwischen den Zellen (keine Lücken mehr); `main_pager_screen.dart` berechnet `MediaQuery.of(context).size.height * 0.05` und addiert diesen Wert als zusätzlichen unteren Innenabstand auf beide Reiterleisten. In 9- und 18-Loch-Modus live verifiziert, Tab-Navigation weiterhin per Antippen funktionsfähig (Commit `e31be99`).
 - 17.09.2026: Nutzer hat per Screenshot die eigentlich gewünschte Darstellung nachgereicht: die vorherige „flächige" Umsetzung (17.09.2026, `e31be99`) traf den gewünschten Look nicht – korrekt sind einzelne, ringsum abgerundete Reiter-Kacheln mit schmalen Zwischenräumen, wobei der aktive Reiter breiter ist und sichtbar in Richtung Seiteninhalt heraus „poppt". `BookTabRail` entsprechend umgebaut: jede Zelle hat wieder ihr eigenes `Material` mit eigenem Radius/Schatten statt einer gemeinsamen Hülle; die Vollhöhen-Verteilung (`Expanded` je Reiter) und der 5-%-Sicherheitsabstand unten bleiben erhalten. In 9- und 18-Loch-Modus live verifiziert (Commit `813680c`).
 - 17.09.2026: Neue Funktion „Runde versenden/löschen" in „Bestehende Runden" umgesetzt (Abschnitt 3.1/5): Swipe nach links auf einer gespeicherten Runde blendet zwei Aktionen ein. „Löschen" entfernt die Runde nach Sicherheitsabfrage endgültig (`RoundsService.deleteRound()`). „Versenden" erzeugt die Scorecard der Runde als PDF (`ScorecardPdfService`, Paket `pdf`, Tabelle mit Loch/Par/HCP/Herren/Damen/Score sowie Score-Summe) und ruft darüber die System-Weiterleitungsfunktion des Geräts auf (Paket `printing`, `Printing.sharePdf` – Share-Sheet unter iOS/Android, Web-Share-API bzw. Datei-Download als Fallback im Browser). Die Swipe-Geste selbst nutzt das Paket `flutter_slidable`. Neue Tests: `deleteRound` in `rounds_service_test.dart`, `scorecard_pdf_service_test.dart` (gültige PDF-Bytes für 9-/18-Loch-Runden), `existing_rounds_screen_test.dart` (Swipe-Aktionen mit korrektem Label im Widget-Baum vorhanden). Bekannte Einschränkung ergänzt: Datei-Share funktioniert je nach Browser/Plattform unterschiedlich, Fallback ist ein normaler Download.
+- 17.09.2026: Nutzer-Wunsch notiert, aber ausdrücklich erst beim nächsten Compile-/Deploy-Zyklus umzusetzen: Test-Anhang mit den vorhandenen automatisierten Tests in Pflichtenheft und Funktionsumfang-Screen (siehe 14.6) – keine Umsetzung in diesem Schritt.
+- 17.09.2026: Nutzer hat Fotos der Vor-Ort-Ausschilderung aller 9 Bahnen sowie der zugehörigen Website-Textseiten hochgeladen. Daraus Par/HCP/Herren-/Damen-Distanzen für die bisher fehlenden 8 Bahnen (Loch 1, 3–9) extrahiert und geprüft (Plausibilitätscheck: ungerade/gerade HCP-Verteilung vorne/hinten stimmig), in `lib/content/course_data.dart` eingetragen (siehe 5e). Charakteristik-Texte gegen die bereits vorhandenen Texte (4a) abgeglichen – keine Abweichungen, keine Textänderung nötig. Damit zeigt die Scorecard für alle 9 Bahnen reale Werte statt „–" (`scoreNote`-Hinweistext in allen 3 Sprachen entsprechend angepasst, `scorecard_page_test.dart` neu geschrieben, „Bekannte Einschränkungen" in `feature_overview_content.dart` um den erledigten Punkt bereinigt). Punkte 3 und 4 in Abschnitt 6 als erledigt markiert.

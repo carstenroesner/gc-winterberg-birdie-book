@@ -60,7 +60,7 @@ const List<FeatureSection> featureOverviewSections = [
       'Automatisch generierte Scorecard mit den Daten der Winterberger Löcher, als letzter Reiter des Pagers.',
       'Bei 18-Loch-Runde ein Vorne/Hinten-Umschalter, bei 9-Loch-Runde direkte Anzeige der 9 Löcher.',
       'Score-Eingabe je Loch wird pro Runde lokal gespeichert.',
-      'Par/HCP/Distanz-Werte liegen aktuell nur für Loch 2/11 vollständig vor (siehe "Bekannte Einschränkungen").',
+      'Par/HCP/Distanz-Werte liegen für alle 9 Bahnen vollständig vor (Quelle: Platzausschilderung).',
     ],
   ),
   FeatureSection(
@@ -75,7 +75,6 @@ const List<FeatureSection> featureOverviewSections = [
 ];
 
 const List<String> featureOverviewKnownLimitations = [
-  'Par/HCP/Distanz-Daten liegen bisher nur für Loch 2/11 vollständig vor; die übrigen 8 Bahnen zeigen "–", bis weitere Tafel-Fotos vorliegen.',
   'Das Vereinslogo ist bislang nur in niedriger Auflösung (70×70 px) verfügbar – App-Icons sind entsprechend nicht optimal scharf.',
   'Der Stil der Lochskizzen ist noch nicht final entschieden; der aktuelle Stil ist ein 1:1-Port der bisherigen Version, ein Redesign wird separat vorbereitet.',
   'Die Schläger-Verwaltung erlaubt aktuell nur eine Sammel-Bearbeitung (Bulk-Edit), keinen Dialog pro einzelnem Schläger.',
