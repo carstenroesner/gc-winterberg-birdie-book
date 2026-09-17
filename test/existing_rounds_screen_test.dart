@@ -1,12 +1,10 @@
 // Prüft die Swipe-Aktionen (Versenden/Löschen) in "Bestehende Runden":
-// jede Runde ist in ein Slidable gewrappt und trägt die beiden erwarteten
-// Aktionen. Die eigentliche Wisch-Geste wird hier bewusst NICHT simuliert
-// (fragiler Drag-Gesture-Test ohne lokale Flutter-Tooling schwer
-// verifizierbar) – stattdessen wird geprüft, dass die Aktionen mit
-// korrektem Label im Widget-Baum vorhanden sind. Die eigentliche
-// Lösch-/PDF-Logik ist in rounds_service_test.dart bzw.
-// scorecard_pdf_service_test.dart eigenständig (und ohne Gesture-Risiko)
-// abgedeckt.
+// nach Wischen nach links (Drag) erscheinen die beiden erwarteten Aktionen
+// mit korrektem Label. flutter_slidable baut den Inhalt der Action-Pane
+// erst, wenn sie tatsächlich geöffnet ist (nicht permanent im Baum) – die
+// Geste muss daher wirklich simuliert werden. Die eigentliche
+// Lösch-/PDF-Logik ist eigenständig in rounds_service_test.dart bzw.
+// scorecard_pdf_service_test.dart abgedeckt.
 
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
@@ -33,8 +31,7 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('jede gespeicherte Runde trägt ein Slidable mit Versenden-/Löschen-Aktion',
-      (tester) async {
+  testWidgets('jede gespeicherte Runde trägt ein Slidable', (tester) async {
     final locale = LocaleService();
     final rounds = RoundsService();
     await locale.load();
@@ -46,7 +43,26 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.byType(Slidable), findsNWidgets(2));
-    expect(find.text('Versenden'), findsNWidgets(2));
-    expect(find.text('Löschen'), findsNWidgets(2));
+  });
+
+  testWidgets('Wischen nach links enthüllt Versenden- und Löschen-Aktion', (tester) async {
+    final locale = LocaleService();
+    final rounds = RoundsService();
+    await locale.load();
+    await rounds.load();
+    await rounds.createNewRound();
+
+    await tester.pumpWidget(_wrap(locale, rounds));
+    await tester.pumpAndSettle();
+
+    // Vor dem Wischen ist die Action-Pane noch nicht aufgebaut.
+    expect(find.text('Versenden'), findsNothing);
+    expect(find.text('Löschen'), findsNothing);
+
+    await tester.drag(find.byType(Slidable), const Offset(-300, 0));
+    await tester.pumpAndSettle();
+
+    expect(find.text('Versenden'), findsOneWidget);
+    expect(find.text('Löschen'), findsOneWidget);
   });
 }
