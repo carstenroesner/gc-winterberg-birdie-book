@@ -47,7 +47,8 @@ class BookTabRail extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
-      mainAxisSize: MainAxisSize.min,
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment:
           side == BookTabSide.left ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [

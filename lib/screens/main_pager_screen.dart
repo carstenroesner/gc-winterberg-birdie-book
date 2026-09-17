@@ -108,9 +108,10 @@ class _MainPagerScreenState extends State<MainPagerScreen> {
         ],
       ),
       body: Row(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Padding(
-            padding: const EdgeInsets.only(left: 4, top: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
             child: BookTabRail(
               side: BookTabSide.left,
               items: leftItems,
@@ -127,7 +128,7 @@ class _MainPagerScreenState extends State<MainPagerScreen> {
           ),
           if (rightItems.isNotEmpty)
             Padding(
-              padding: const EdgeInsets.only(right: 4, top: 8),
+              padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 12),
               child: BookTabRail(
                 side: BookTabSide.right,
                 items: rightItems,
