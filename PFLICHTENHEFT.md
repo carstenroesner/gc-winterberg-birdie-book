@@ -385,6 +385,7 @@ Bei der Diagnose zeigte sich zusätzlich ein echter (kein Test-)Bug: `ClubsServi
 
 - Logo-Auflösung (Punkt 14 in Abschnitt 6) bleibt unabhängig von der Migration offen.
 - Entscheidung über die Neugestaltung der Lochskizzen (Abschnitt 13, vier Design-Canvas-Entwürfe) bleibt offen und unabhängig von dieser Migration – dank der getrennten Architektur (14.2) jederzeit nachrüstbar.
+- **Test-Anhang (Nutzerwunsch vom 17.09.2026, Umsetzung erst beim nächsten Compile-/Deploy-Zyklus):** Sowohl diesem Pflichtenheft als auch dem In-App-„Funktionsumfang"-Screen (`feature_overview_content.dart`) soll ein Anhang hinzugefügt werden, der die vorhandenen automatisierten Tests (`test/*.dart`, per `flutter test` in der CI ausgeführt) auflistet – je Testdatei die geprüften Fälle. Ausdrücklich noch nicht jetzt umzusetzen, sondern beim nächsten ohnehin anstehenden Code-/Deploy-Zyklus mit zu erledigen.
 
 ---
 
