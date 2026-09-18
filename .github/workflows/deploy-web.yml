@@ -38,8 +38,45 @@ jobs:
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Run tests
-        run: flutter test
+      - name: Run tests (mit Diagnose-Annotations)
+        run: |
+          set -o pipefail
+          flutter test --reporter json > /tmp/test-results.jsonl || TEST_EXIT=$?
+          python3 - <<'PYEOF'
+          import json
+
+          names = {}
+          failures = []
+
+          with open('/tmp/test-results.jsonl') as f:
+              for line in f:
+                  line = line.strip()
+                  if not line:
+                      continue
+                  try:
+                      ev = json.loads(line)
+                  except json.JSONDecodeError:
+                      continue
+                  t = ev.get('type')
+                  if t == 'testStart':
+                      test = ev.get('test', {})
+                      names[test.get('id')] = test.get('name')
+                  elif t == 'error':
+                      tid = ev.get('testID')
+                      failures.append({
+                          'name': names.get(tid, f'test#{tid}'),
+                          'error': ev.get('error', ''),
+                      })
+
+          if failures:
+              print(f'::error::{len(failures)} Test(s) fehlgeschlagen')
+              for fail in failures:
+                  msg = (fail['error'] or '').replace('\n', ' | ')[:800]
+                  print(f"::error::FAILED: {fail['name']} -- {msg}")
+          else:
+              print('Keine Fehlschlaege in den JSON-Testergebnissen gefunden.')
+          PYEOF
+          test -z "${TEST_EXIT:-}" || exit "$TEST_EXIT"
 
       - name: Build web release
         run: flutter build web --release --base-href /gc-winterberg-birdie-book/
