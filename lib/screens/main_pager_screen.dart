@@ -131,16 +131,21 @@ class _MainPagerScreenState extends State<MainPagerScreen> {
               children: pages,
             ),
           ),
-          if (rightItems.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.only(left: 4, right: 4, top: 12, bottom: 12 + railBottomInset),
-              child: BookTabRail(
-                side: BookTabSide.right,
-                items: rightItems,
-                activePage: _activePage,
-                onSelectPage: _jumpToPage,
-              ),
+          // Die rechte Reiterleiste wird bei einer 9-Bahnen-Runde immer noch
+          // gerendert (nur eben ohne Reiter/"leer"), statt komplett aus der
+          // Row entfernt zu werden. Sonst reserviert nur die linke Leiste
+          // Platz und die Bahnseite wirkt asymmetrisch nach rechts verschoben
+          // (Layout-Bug, gemeldet vom Nutzer am 18.09.2026: linker Rand der
+          // Bahnenkarte doppelt so breit wie der rechte im 9-Bahnen-Modus).
+          Padding(
+            padding: EdgeInsets.only(left: 4, right: 4, top: 12, bottom: 12 + railBottomInset),
+            child: BookTabRail(
+              side: BookTabSide.right,
+              items: rightItems,
+              activePage: _activePage,
+              onSelectPage: _jumpToPage,
             ),
+          ),
         ],
       ),
     );
