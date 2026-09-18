@@ -9,10 +9,13 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gc_winterberg_birdie_book/main.dart';
+import 'package:gc_winterberg_birdie_book/services/weather_service.dart';
 
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+    // Kein echter Netzwerkaufruf in Tests (siehe weather_service.dart).
+    weatherFetcher = () async => null;
   });
 
   testWidgets('App zeigt zunächst den Splash und danach den Startbildschirm',
@@ -44,5 +47,22 @@ void main() {
     // Erscheint zweimal: in der Kontextzeile der Kopfleiste und als
     // Seiten-Überschrift der Rundeneinstellungen-Seite selbst.
     expect(find.text('Rundeneinstellungen'), findsWidgets);
+  });
+
+  testWidgets('Namensfeld auf der Startseite ist beim ersten Start leer und speichert Eingaben',
+      (tester) async {
+    await tester.pumpWidget(const GcwbbApp());
+    await tester.pump(const Duration(milliseconds: 500));
+    await tester.pumpAndSettle();
+
+    final nameField = find.byType(TextField);
+    expect(nameField, findsOneWidget);
+    expect(tester.widget<TextField>(nameField).controller?.text, isEmpty);
+
+    await tester.enterText(nameField, 'Carsten');
+    await tester.pumpAndSettle();
+
+    final prefs = await SharedPreferences.getInstance();
+    expect(prefs.getString('gcwbb_player_name'), 'Carsten');
   });
 }

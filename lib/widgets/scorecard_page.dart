@@ -11,6 +11,7 @@ import '../models/hole.dart';
 import '../models/round.dart';
 import '../services/locale_service.dart';
 import '../services/rounds_service.dart';
+import '../services/weather_service.dart';
 import '../theme/golf_palette.dart';
 
 class ScorecardPage extends StatefulWidget {
@@ -55,9 +56,27 @@ class _ScorecardPageState extends State<ScorecardPage> {
                 ),
                 const SizedBox(height: 6),
                 Text(locale.t('scorecardTitle'), style: Theme.of(context).textTheme.headlineSmall),
-                Text(
-                  round == null ? '–' : _fmtDate(round.date),
-                  style: TextStyle(color: GolfPalette.inkSoft),
+                Row(
+                  children: [
+                    Text(
+                      round == null ? '–' : _fmtDate(round.date),
+                      style: TextStyle(color: GolfPalette.inkSoft),
+                    ),
+                    if (round?.weatherCode != null) ...[
+                      const SizedBox(width: 8),
+                      Icon(
+                        weatherIconFor(weatherCategoryForCode(round!.weatherCode!)),
+                        size: 15,
+                        color: GolfPalette.inkSoft,
+                      ),
+                      const SizedBox(width: 3),
+                      Text(
+                        '${locale.t(weatherLabelKeyFor(weatherCategoryForCode(round.weatherCode!)))}'
+                        ' · ${round.weatherTempC!.round()}\u00b0C',
+                        style: TextStyle(color: GolfPalette.inkSoft),
+                      ),
+                    ],
+                  ],
                 ),
               ],
             ),

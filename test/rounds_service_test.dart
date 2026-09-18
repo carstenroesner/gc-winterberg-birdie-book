@@ -3,10 +3,14 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:gc_winterberg_birdie_book/models/round.dart';
 import 'package:gc_winterberg_birdie_book/services/rounds_service.dart';
+import 'package:gc_winterberg_birdie_book/services/weather_service.dart';
 
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+    // Kein echter Netzwerkaufruf in Tests (siehe weather_service.dart);
+    // einzelne Tests überschreiben dies gezielt wieder.
+    weatherFetcher = () async => null;
   });
 
   test('startet ohne gespeicherte Runden', () async {
@@ -14,15 +18,15 @@ void main() {
     await service.load();
     expect(service.rounds, isEmpty);
     expect(service.currentRound, isNull);
-    expect(service.currentHoleCount, 18); // Default laut holeCountFor()
+    expect(service.currentHoleCount, 9); // Default laut holeCountFor()
   });
 
-  test('createNewRound legt eine 18-Loch-Runde an und macht sie aktuell', () async {
+  test('createNewRound legt eine 9-Loch-Runde an und macht sie aktuell', () async {
     final service = RoundsService();
     await service.load();
     final round = await service.createNewRound();
 
-    expect(round.holeCount, 18);
+    expect(round.holeCount, 9);
     expect(round.scores, isEmpty);
     expect(service.currentRoundId, round.id);
     expect(service.rounds.first.id, round.id);
@@ -32,8 +36,8 @@ void main() {
     final service = RoundsService();
     await service.load();
     await service.createNewRound();
-    await service.setCurrentHoleCount(9);
-    expect(service.currentHoleCount, 9);
+    await service.setCurrentHoleCount(18);
+    expect(service.currentHoleCount, 18);
   });
 
   test('setScore verwendet das Schlüsselformat front-<n>/back-<n>', () async {
@@ -102,5 +106,39 @@ void main() {
 
     expect(service.currentRoundId, isNull);
     expect(service.currentRound, isNull);
+  });
+
+  test('createNewRound hinterlegt bei erfolgreichem Wetterabruf die Werte an der Runde',
+      () async {
+    weatherFetcher =
+        () async => const WeatherReading(tempC: 18.4, code: 1, windKph: 9.2);
+
+    final service = RoundsService();
+    await service.load();
+    final round = await service.createNewRound();
+    // Der Abruf läuft nicht-blockierend im Hintergrund (siehe
+    // RoundsService._fetchWeatherFor); mit dem synchronen Fake-Fetcher oben
+    // ist er nach einem Mikrotask-Durchlauf bereits fertig.
+    await Future<void>.delayed(Duration.zero);
+
+    expect(round.weatherTempC, isNull); // Rückgabewert ist der Stand vor dem Abruf.
+    final updated = service.rounds.firstWhere((r) => r.id == round.id);
+    expect(updated.weatherTempC, 18.4);
+    expect(updated.weatherCode, 1);
+    expect(updated.weatherWindKph, 9.2);
+  });
+
+  test('createNewRound lässt die Runde ohne Wetterdaten, wenn der Abruf fehlschlägt',
+      () async {
+    weatherFetcher = () async => null;
+
+    final service = RoundsService();
+    await service.load();
+    final round = await service.createNewRound();
+    await Future<void>.delayed(Duration.zero);
+
+    final updated = service.rounds.firstWhere((r) => r.id == round.id);
+    expect(updated.weatherTempC, isNull);
+    expect(updated.weatherCode, isNull);
   });
 }

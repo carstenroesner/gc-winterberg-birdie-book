@@ -15,6 +15,7 @@ import 'package:provider/provider.dart';
 import 'screens/start_screen.dart';
 import 'services/clubs_service.dart';
 import 'services/locale_service.dart';
+import 'services/player_service.dart';
 import 'services/rounds_service.dart';
 import 'theme/app_theme.dart';
 
@@ -32,6 +33,7 @@ class GcwbbApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LocaleService()),
         ChangeNotifierProvider(create: (_) => ClubsService()),
         ChangeNotifierProvider(create: (_) => RoundsService()),
+        ChangeNotifierProvider(create: (_) => PlayerService()),
       ],
       child: MaterialApp(
         title: 'GC Winterberg Birdie Book',
@@ -67,10 +69,12 @@ class _InitGateState extends State<_InitGate> {
     final locale = context.read<LocaleService>();
     final clubs = context.read<ClubsService>();
     final rounds = context.read<RoundsService>();
+    final player = context.read<PlayerService>();
     await Future.wait([
       locale.load(),
       clubs.load(),
       rounds.load(),
+      player.load(),
       Future.delayed(_splashMinDuration),
     ]);
     if (!mounted) return;

@@ -10,6 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gc_winterberg_birdie_book/screens/main_pager_screen.dart';
 import 'package:gc_winterberg_birdie_book/services/locale_service.dart';
 import 'package:gc_winterberg_birdie_book/services/rounds_service.dart';
+import 'package:gc_winterberg_birdie_book/services/weather_service.dart';
 import 'package:gc_winterberg_birdie_book/widgets/book_tab_rail.dart';
 
 Widget _wrap(LocaleService locale, RoundsService rounds) {
@@ -25,6 +26,8 @@ Widget _wrap(LocaleService locale, RoundsService rounds) {
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+    // Kein echter Netzwerkaufruf in Tests (siehe weather_service.dart).
+    weatherFetcher = () async => null;
   });
 
   testWidgets(
@@ -35,7 +38,8 @@ void main() {
     final rounds = RoundsService();
     await locale.load();
     await rounds.load();
-    await rounds.createNewRound(); // Default 18 Loch
+    await rounds.createNewRound(); // Default seit 18.09.2026: 9 Loch
+    await rounds.setCurrentHoleCount(18);
 
     await tester.pumpWidget(_wrap(locale, rounds));
     await tester.pumpAndSettle();

@@ -57,4 +57,28 @@ void main() {
     expect(result, contains('123'));
     expect(result, isNot(contains('{address}')));
   });
+
+  test('DE/EN/NL kennen für jede Sprache dieselben Keys (kein Übersetzungs-Drift)',
+      () async {
+    for (final lang in ['de', 'en', 'nl']) {
+      final service = LocaleService();
+      await service.load();
+      await service.setLang(lang);
+      for (final key in [
+        'yourName',
+        'yourNameHint',
+        'weatherClear',
+        'weatherPartlyCloudy',
+        'weatherCloudy',
+        'weatherFog',
+        'weatherDrizzle',
+        'weatherRain',
+        'weatherSnow',
+        'weatherThunderstorm',
+        'holeInfo',
+      ]) {
+        expect(service.t(key), isNot(key), reason: '$lang: Key "$key" fehlt/nicht übersetzt');
+      }
+    }
+  });
 }

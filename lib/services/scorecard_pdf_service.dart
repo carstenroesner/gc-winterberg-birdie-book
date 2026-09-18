@@ -14,6 +14,7 @@ import 'package:printing/printing.dart';
 
 import '../content/course_data.dart';
 import '../models/round.dart';
+import 'weather_service.dart';
 
 class ScorecardPdfService {
   ScorecardPdfService._();
@@ -65,6 +66,12 @@ class ScorecardPdfService {
               pw.Text(
                 round.holeCount == 9 ? '9-Bahnen-Runde' : '18-Bahnen-Runde',
               ),
+              if (round.weatherCode != null)
+                pw.Text(
+                  'Wetter: ${weatherLabelDe(weatherCategoryForCode(round.weatherCode!))}'
+                  ' · ${round.weatherTempC!.round()}\u00b0C'
+                  ' · Wind ${round.weatherWindKph!.round()} km/h',
+                ),
               pw.SizedBox(height: 16),
               pw.Table.fromTextArray(
                 headers: const ['Bahn', 'Par', 'HCP', 'Herren', 'Damen', 'Score'],

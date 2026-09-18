@@ -27,13 +27,14 @@ const List<FeatureSection> featureOverviewSections = [
       '"Bestehende Runden" zeigt eine Verlaufsliste bereits gespeicherter Runden zur Auswahl.',
       'Jede gespeicherte Runde lässt sich nach links wischen, um sie zu löschen oder als PDF-Scorecard über die System-Weiterleitungsfunktion des Geräts zu versenden (z. B. WhatsApp oder E-Mail).',
       'Sprachauswahl (Deutsch/Englisch/Niederländisch) per Flaggen-Zeile.',
+      'Namensfeld: einmal eingegeben, wird der Name dauerhaft gespeichert und künftig immer vorgeschlagen.',
     ],
   ),
   FeatureSection(
     title: '2. Rundeneinstellungen',
     points: [
       'Erster Schritt nach der Start-Auswahl, noch vor Bahn 1.',
-      'Umschalter "9-Bahnen-Runde" / "18-Bahnen-Runde" (Default: 18-Bahnen-Runde).',
+      'Umschalter "9-Bahnen-Runde" / "18-Bahnen-Runde" (Default: 9-Bahnen-Runde).',
       'Bestimmt, wie viele Bahnseiten der Pager enthält; jederzeit während der Runde änderbar.',
     ],
   ),
@@ -42,7 +43,8 @@ const List<FeatureSection> featureOverviewSections = [
     points: [
       'Bahnen, Rundeneinstellungen und Scorecard als Seiten eines gemeinsamen Pagers – Navigation durch Wischen oder per Direktsprung über die Reiter.',
       'Jede Bahnseite zeigt ein echtes, bereinigtes Foto der Vor-Ort-Bahnentafel (Dogleg-Verlauf, Grün, Bunker, ggf. Wasser sowie die Distanztafel) statt einer Handskizze.',
-      'Ein Info-Button (i) neben der Bahnnummer öffnet den Charakteristik-Text groß in einem Dialog – die Bahnseite selbst bleibt dadurch aufgeräumt.',
+      'Ein Tipp-Button (Glühbirnen-Symbol) neben der Bahnnummer öffnet den Charakteristik-Text groß in einem Dialog – die Bahnseite selbst bleibt dadurch aufgeräumt.',
+      'Die Bahn-Charakteristik-Texte liegen auf Deutsch, Englisch und Niederländisch vor und folgen der oben gewählten App-Sprache.',
       'Links eine Reihe von Reitern für Bahn 1–9 (bzw. zusätzlich 10–18 bei 18-Bahnen-Runde) als Direktsprung-Navigation.',
       'Bahn n und Bahn n+9 teilen sich dasselbe Bahnenbild, unterscheiden sich durch Abschlag und Distanz.',
     ],
@@ -62,6 +64,7 @@ const List<FeatureSection> featureOverviewSections = [
       'Bei 18-Bahnen-Runde ein Vorne/Hinten-Umschalter, bei 9-Bahnen-Runde direkte Anzeige der 9 Bahnen.',
       'Score-Eingabe je Bahn wird pro Runde lokal gespeichert.',
       'Par/HCP/Distanz-Werte liegen für alle 9 Bahnen vollständig vor (Quelle: Platzausschilderung).',
+      'Datum der Runde sowie – sofern beim Anlegen der Runde erfolgreich abgerufen – die aktuellen Wetterbedingungen am Platz werden dauerhaft mit der Runde gespeichert.',
     ],
   ),
   FeatureSection(

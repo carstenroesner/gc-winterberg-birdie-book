@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gc_winterberg_birdie_book/content/course_data.dart';
 import 'package:gc_winterberg_birdie_book/services/locale_service.dart';
 import 'package:gc_winterberg_birdie_book/services/rounds_service.dart';
+import 'package:gc_winterberg_birdie_book/services/weather_service.dart';
 import 'package:gc_winterberg_birdie_book/widgets/scorecard_page.dart';
 
 Widget _wrap(Widget child, LocaleService locale, RoundsService rounds) {
@@ -26,6 +27,9 @@ Widget _wrap(Widget child, LocaleService locale, RoundsService rounds) {
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+    // Kein echter Netzwerkaufruf in Tests (siehe weather_service.dart);
+    // einzelne Tests überschreiben dies gezielt wieder.
+    weatherFetcher = () async => null;
   });
 
   test('alle 9 Bahnen haben einen erfassten Scorecard-Datensatz', () {
@@ -76,5 +80,26 @@ void main() {
     await tester.pumpWidget(_wrap(const ScorecardPage(holeCount: 18), locale, rounds));
     await tester.pumpAndSettle();
     expect(find.byType(SegmentedButton<bool>), findsOneWidget);
+  });
+
+  testWidgets('Scorecard zeigt Wetterbedingungen an, sobald der Abruf vorliegt',
+      (tester) async {
+    weatherFetcher =
+        () async => const WeatherReading(tempC: 21.0, code: 0, windKph: 5.0);
+
+    final locale = LocaleService();
+    final rounds = RoundsService();
+    await locale.load();
+    await rounds.load();
+    await rounds.createNewRound();
+    await rounds.setCurrentHoleCount(9);
+    // Fake-Fetcher läuft im Hintergrund durch (siehe rounds_service_test.dart).
+    await Future<void>.delayed(Duration.zero);
+
+    await tester.pumpWidget(_wrap(const ScorecardPage(holeCount: 9), locale, rounds));
+    await tester.pumpAndSettle();
+
+    expect(find.textContaining('Sonnig'), findsOneWidget);
+    expect(find.textContaining('21°C'), findsOneWidget);
   });
 }

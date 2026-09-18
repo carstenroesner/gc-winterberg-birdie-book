@@ -3,13 +3,20 @@
 // Zeichengenau an das Verhalten von js/app.js angelehnt (getRounds/
 // saveRounds/createNewRound/updateCurrentRound), inkl. Score-Schlüssel-
 // Format `"front-<n>"`/`"back-<n>"` (siehe Round.scoreKey).
+//
+// Default-Rundenlänge ist seit 18.09.2026 9 Bahnen (Nutzerwunsch, siehe
+// PFLICHTENHEFT.md Abschnitt 8/18; vorher 18). Ebenfalls seit 18.09.2026:
+// `createNewRound()` stößt einen automatischen, nicht blockierenden
+// Wetterabruf für die neue Runde an (siehe WeatherService).
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../models/round.dart';
+import 'weather_service.dart';
 
 const String _prefsKeyRounds = 'gcwbb_rounds';
 const String _prefsKeyCurrent = 'gcwbb_current_round';
@@ -38,8 +45,8 @@ class RoundsService extends ChangeNotifier {
     return null;
   }
 
-  /// Rundenlänge der aktuellen Runde, Default 18 (entspricht `holeCountFor`).
-  int get currentHoleCount => currentRound?.holeCount ?? 18;
+  /// Rundenlänge der aktuellen Runde, Default 9 (entspricht `holeCountFor`).
+  int get currentHoleCount => currentRound?.holeCount ?? 9;
 
   Future<void> load() async {
     final prefs = await SharedPreferences.getInstance();
@@ -76,14 +83,16 @@ class RoundsService extends ChangeNotifier {
     }
   }
 
-  /// Legt eine neue Runde an (Default 18-Loch, heutiges Datum) und macht
-  /// sie zur aktuellen Runde. Entspricht `createNewRound()` in js/app.js.
+  /// Legt eine neue Runde an (Default 9-Loch, heutiges Datum) und macht sie
+  /// zur aktuellen Runde. Entspricht `createNewRound()` in js/app.js. Stößt
+  /// zusätzlich einen nicht blockierenden Wetterabruf an (siehe
+  /// [_fetchWeatherFor]) – die Rückgabe der Methode wartet darauf nicht.
   Future<Round> createNewRound() async {
     final id = 'r${DateTime.now().millisecondsSinceEpoch}_${_idCounter++}';
     final round = Round(
       id: id,
       date: DateTime.now(),
-      holeCount: 18,
+      holeCount: 9,
       scores: const {},
     );
     _rounds = [round, ..._rounds];
@@ -91,7 +100,29 @@ class RoundsService extends ChangeNotifier {
     notifyListeners();
     await _persistRounds();
     await _persistCurrent();
+    unawaited(_fetchWeatherFor(id));
     return round;
+  }
+
+  /// Ruft einmalig die aktuellen Wetterbedingungen ab und hinterlegt sie an
+  /// der Runde mit [id] (auch falls sie zwischenzeitlich nicht mehr die
+  /// aktuelle Runde ist). Schlägt der Abruf fehl oder wurde die Runde
+  /// inzwischen gelöscht, passiert einfach nichts – Wetter ist optional.
+  Future<void> _fetchWeatherFor(String id) async {
+    final weather = await weatherFetcher();
+    if (weather == null) return;
+    final idx = _rounds.indexWhere((r) => r.id == id);
+    if (idx == -1) return;
+    final updated = _rounds[idx].copyWithWeather(
+      weatherTempC: weather.tempC,
+      weatherCode: weather.code,
+      weatherWindKph: weather.windKph,
+    );
+    final next = List<Round>.of(_rounds);
+    next[idx] = updated;
+    _rounds = next;
+    notifyListeners();
+    await _persistRounds();
   }
 
   Future<void> selectRound(String id) async {

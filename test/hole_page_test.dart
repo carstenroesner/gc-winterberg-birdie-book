@@ -1,5 +1,7 @@
-// Prüft die Lochseite: Der Info-Button (i) neben der Lochnummer öffnet einen
-// Dialog mit dem Charakteristik-Text der Bahn (seit 17.09.2026 nicht mehr
+// Prüft die Lochseite: Der Tipp-Button (Glühbirnen-Symbol, seit 18.09.2026
+// statt des vorherigen (i)-Info-Icons, siehe PFLICHTENHEFT.md Abschnitt 18)
+// neben der Lochnummer öffnet einen Dialog mit dem Charakteristik-Text der
+// Bahn in der aktuell gewählten Sprache (seit 17.09.2026 nicht mehr
 // dauerhaft auf der Seite sichtbar, siehe PFLICHTENHEFT.md Abschnitt 15) und
 // lässt sich wieder schließen.
 
@@ -24,18 +26,18 @@ void main() {
     SharedPreferences.setMockInitialValues({});
   });
 
-  testWidgets('Charakteristik-Text ist erst nach Tippen auf den Info-Button sichtbar',
+  testWidgets('Charakteristik-Text ist erst nach Tippen auf den Tipp-Button sichtbar',
       (tester) async {
     final locale = LocaleService();
     await locale.load();
 
-    final holeText = holes[0].text; // Bahn 1
+    final holeText = holes[0].textFor('de'); // Bahn 1
     await tester.pumpWidget(_wrap(locale, const HolePage(n: 1)));
     await tester.pumpAndSettle();
 
     expect(find.text(holeText), findsNothing);
 
-    await tester.tap(find.byIcon(Icons.info_outline));
+    await tester.tap(find.byIcon(Icons.lightbulb_outline));
     await tester.pumpAndSettle();
 
     expect(find.text(holeText), findsOneWidget);
@@ -44,6 +46,22 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text(holeText), findsNothing);
+  });
+
+  testWidgets('Charakteristik-Text erscheint in der aktuell gewählten Sprache (EN)',
+      (tester) async {
+    final locale = LocaleService();
+    await locale.load();
+    await locale.setLang('en');
+
+    final holeTextEn = holes[0].textFor('en');
+    await tester.pumpWidget(_wrap(locale, const HolePage(n: 1)));
+    await tester.pumpAndSettle();
+
+    await tester.tap(find.byIcon(Icons.lightbulb_outline));
+    await tester.pumpAndSettle();
+
+    expect(find.text(holeTextEn), findsOneWidget);
   });
 
   testWidgets('Lochseite zeigt Par/HCP sowie Herren-/Damen-Distanzen', (tester) async {

@@ -41,4 +41,21 @@ void main() {
     expect(bytes.isNotEmpty, isTrue);
     expect(String.fromCharCodes(bytes.take(4)), '%PDF');
   });
+
+  test('erzeugt ein gültiges PDF, wenn Wetterdaten an der Runde hinterlegt sind', () async {
+    final round = Round(
+      id: 'r2',
+      date: DateTime(2026, 9, 18),
+      holeCount: 9,
+      scores: const {},
+      weatherTempC: 18.4,
+      weatherCode: 1,
+      weatherWindKph: 9.2,
+    );
+
+    final bytes = await ScorecardPdfService.buildPdf(round);
+
+    expect(bytes.isNotEmpty, isTrue);
+    expect(String.fromCharCodes(bytes.take(4)), '%PDF');
+  });
 }

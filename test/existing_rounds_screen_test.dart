@@ -15,6 +15,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:gc_winterberg_birdie_book/screens/existing_rounds_screen.dart';
 import 'package:gc_winterberg_birdie_book/services/locale_service.dart';
 import 'package:gc_winterberg_birdie_book/services/rounds_service.dart';
+import 'package:gc_winterberg_birdie_book/services/weather_service.dart';
 
 Widget _wrap(LocaleService locale, RoundsService rounds) {
   return MultiProvider(
@@ -29,6 +30,8 @@ Widget _wrap(LocaleService locale, RoundsService rounds) {
 void main() {
   setUp(() {
     SharedPreferences.setMockInitialValues({});
+    // Kein echter Netzwerkaufruf in Tests (siehe weather_service.dart).
+    weatherFetcher = () async => null;
   });
 
   testWidgets('jede gespeicherte Runde trägt ein Slidable', (tester) async {
