@@ -27,7 +27,6 @@ flutter:
   uses-material-design: true
   assets:
     - assets/logo.png
-    - assets/holes/
   fonts:
     - family: Manrope
       fonts:
