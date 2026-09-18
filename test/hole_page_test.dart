@@ -54,8 +54,10 @@ void main() {
     await tester.pumpWidget(_wrap(locale, const HolePage(n: 1)));
     await tester.pumpAndSettle();
 
-    expect(find.text('4'), findsOneWidget);
-    expect(find.text('3'), findsOneWidget);
+    // Par/HCP werden als zusammengesetzter Text.rich ("Par 4", "HCP 3")
+    // gerendert, daher hier mit findRichText/textContaining statt find.text.
+    expect(find.textContaining('Par 4', findRichText: true), findsOneWidget);
+    expect(find.textContaining('HCP 3', findRichText: true), findsOneWidget);
     expect(find.text('397 m'), findsOneWidget);
     expect(find.text('364 m'), findsOneWidget);
   });
