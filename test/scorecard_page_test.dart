@@ -93,10 +93,16 @@ void main() {
     await rounds.load();
     await rounds.createNewRound();
     await rounds.setCurrentHoleCount(9);
-    // Fake-Fetcher läuft im Hintergrund durch (siehe rounds_service_test.dart).
-    await Future<void>.delayed(Duration.zero);
 
     await tester.pumpWidget(_wrap(const ScorecardPage(holeCount: 9), locale, rounds));
+    // Der Wetter-Hintergrundabruf (unawaited in RoundsService.createNewRound)
+    // läuft rein über Microtasks (kein echter Timer). In testWidgets()
+    // NIEMALS Future.delayed() verwenden, um darauf zu warten - das erzeugt
+    // einen echten Timer, der in der FakeAsync-Testumgebung ohne manuelles
+    // Vorspulen nie feuert und den Test bis zum CI-Timeout hängen lässt
+    // (siehe Vorfall vom 18.09.2026). tester.pump() lässt die Microtasks
+    // durchlaufen und baut den Provider neu, bevor pumpAndSettle läuft.
+    await tester.pump();
     await tester.pumpAndSettle();
 
     expect(find.textContaining('Sonnig'), findsOneWidget);
