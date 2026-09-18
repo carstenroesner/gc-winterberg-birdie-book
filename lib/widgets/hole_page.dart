@@ -107,9 +107,10 @@ class HolePage extends StatelessWidget {
                     constraints: const BoxConstraints(maxWidth: 320),
                     child: ClipRRect(
                       borderRadius: BorderRadius.circular(12),
-                      child: Image.asset(
-                        'assets/holes/bahn$physicalN.png',
-                        fit: BoxFit.contain,
+                      child: Container(
+                        height: 200,
+                        color: Colors.green,
+                        child: Text('DIAG: bahn$physicalN'),
                       ),
                     ),
                   ),
