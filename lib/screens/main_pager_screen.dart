@@ -131,21 +131,31 @@ class _MainPagerScreenState extends State<MainPagerScreen> {
               children: pages,
             ),
           ),
-          // Die rechte Reiterleiste wird bei einer 9-Bahnen-Runde immer noch
-          // gerendert (nur eben ohne Reiter/"leer"), statt komplett aus der
-          // Row entfernt zu werden. Sonst reserviert nur die linke Leiste
-          // Platz und die Bahnseite wirkt asymmetrisch nach rechts verschoben
-          // (Layout-Bug, gemeldet vom Nutzer am 18.09.2026: linker Rand der
-          // Bahnenkarte doppelt so breit wie der rechte im 9-Bahnen-Modus).
-          Padding(
-            padding: EdgeInsets.only(left: 4, right: 4, top: 12, bottom: 12 + railBottomInset),
-            child: BookTabRail(
-              side: BookTabSide.right,
-              items: rightItems,
-              activePage: _activePage,
-              onSelectPage: _jumpToPage,
+          // Die rechte Reiterleiste wird im 9-Bahnen-Modus komplett aus der
+          // Row entfernt (rightItems ist dann leer), statt wie zwischen
+          // 18.09. und 20.09.2026 leer weiterzurendern. Dieser Zwischenstand
+          // reservierte zwar denselben Platz wie die linke Leiste, aber ohne
+          // sichtbaren Inhalt wirkte diese Reservierung wie eine riesige,
+          // unbenutzte Leerfläche rechts - optisch deutlich breiter als der
+          // schmale Abstand links neben der sichtbaren, gefuellten Leiste,
+          // obwohl beide Karten-Ränder rein rechnerisch symmetrisch waren.
+          // Ohne die rechte Leiste bemisst sich die Bahnenkarte stattdessen
+          // an der verbleibenden Breite nach der linken Leiste, wodurch ihr
+          // eigener Abstand (SingleChildScrollView-Padding, 16px) auf beiden
+          // Seiten gleich groß ist - das entspricht dem, was tatsächlich als
+          // "Rand" wahrgenommen wird. Siehe PFLICHTENHEFT.md Abschnitt 21
+          // (Nutzer-Feedback per Screenshot vom 19.09.2026: rechter Rand
+          // wirkte doppelt so breit wie der linke im 9-Bahnen-Modus).
+          if (rightItems.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(left: 4, right: 4, top: 12, bottom: 12 + railBottomInset),
+              child: BookTabRail(
+                side: BookTabSide.right,
+                items: rightItems,
+                activePage: _activePage,
+                onSelectPage: _jumpToPage,
+              ),
             ),
-          ),
         ],
       ),
     );

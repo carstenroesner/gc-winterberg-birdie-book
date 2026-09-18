@@ -31,9 +31,9 @@ void main() {
   });
 
   testWidgets(
-      '18-Loch-Runde zeigt zwei gefuellte Reiterleisten, 9-Loch nur links '
-      'gefuellt (rechte Leiste bleibt aus Layout-Symmetriegruenden '
-      'gerendert, aber leer)', (tester) async {
+      '18-Loch-Runde zeigt zwei gefuellte Reiterleisten, 9-Loch nur die '
+      'linke (rechte Leiste verschwindet komplett aus dem Layout, damit '
+      'die Bahnenkarte symmetrische Raender bekommt)', (tester) async {
     final locale = LocaleService();
     final rounds = RoundsService();
     await locale.load();
@@ -44,8 +44,8 @@ void main() {
     await tester.pumpWidget(_wrap(locale, rounds));
     await tester.pumpAndSettle();
 
-    // Beide Reiterleisten sind immer im Widget-Baum (Layout-Symmetrie,
-    // siehe main_pager_screen.dart) - im 18-Loch-Modus mit Inhalt.
+    // Im 18-Loch-Modus sind beide Reiterleisten im Widget-Baum, beide mit
+    // Inhalt.
     expect(find.byType(BookTabRail), findsNWidgets(2));
     final railsWith18 = tester.widgetList<BookTabRail>(find.byType(BookTabRail));
     expect(railsWith18.every((r) => r.items.isNotEmpty), isTrue);
@@ -53,15 +53,14 @@ void main() {
     await rounds.setCurrentHoleCount(9);
     await tester.pumpAndSettle();
 
-    // Weiterhin zwei Reiterleisten im Baum, aber die rechte ist jetzt leer
-    // (keine Reiter) statt komplett zu verschwinden - sonst waere die
-    // Bahnenkarte im 9-Loch-Modus asymmetrisch verschoben.
-    expect(find.byType(BookTabRail), findsNWidgets(2));
-    final railsWith9 = tester.widgetList<BookTabRail>(find.byType(BookTabRail));
-    final leftRail = railsWith9.firstWhere((r) => r.side == BookTabSide.left);
-    final rightRail = railsWith9.firstWhere((r) => r.side == BookTabSide.right);
+    // Im 9-Loch-Modus ist nur noch die linke Reiterleiste im Baum - die
+    // rechte wird komplett aus der Row entfernt (siehe main_pager_screen.dart
+    // und PFLICHTENHEFT.md Abschnitt 21), statt leer weiterzurendern und so
+    // unbenutzten Platz auf der rechten Seite zu reservieren.
+    expect(find.byType(BookTabRail), findsOneWidget);
+    final leftRail = tester.widget<BookTabRail>(find.byType(BookTabRail));
+    expect(leftRail.side, BookTabSide.left);
     expect(leftRail.items, isNotEmpty);
-    expect(rightRail.items, isEmpty);
   });
 
   testWidgets('Tippen auf einen Lochreiter springt sofort auf die Lochseite', (tester) async {
