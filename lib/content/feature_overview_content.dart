@@ -43,7 +43,7 @@ const List<FeatureSection> featureOverviewSections = [
     points: [
       'Bahnen, Rundeneinstellungen und Scorecard als Seiten eines gemeinsamen Pagers – Navigation durch Wischen oder per Direktsprung über die Reiter.',
       'Jede Bahnseite zeigt ein echtes, bereinigtes Foto der Vor-Ort-Bahnentafel (Dogleg-Verlauf, Grün, Bunker, ggf. Wasser sowie die Distanztafel) statt einer Handskizze.',
-      'Ein Tipp-Button (Glühbirnen-Symbol) neben der Bahnnummer öffnet den Charakteristik-Text groß in einem Dialog – die Bahnseite selbst bleibt dadurch aufgeräumt.',
+      'Ein Info-Button neben der Bahnnummer öffnet den Charakteristik-Text groß in einem Dialog – die Bahnseite selbst bleibt dadurch aufgeräumt.',
       'Die Bahn-Charakteristik-Texte liegen auf Deutsch, Englisch und Niederländisch vor und folgen der oben gewählten App-Sprache.',
       'Links eine Reihe von Reitern für Bahn 1–9 (bzw. zusätzlich 10–18 bei 18-Bahnen-Runde) als Direktsprung-Navigation.',
       'Bahn n und Bahn n+9 teilen sich dasselbe Bahnenbild, unterscheiden sich durch Abschlag und Distanz.',

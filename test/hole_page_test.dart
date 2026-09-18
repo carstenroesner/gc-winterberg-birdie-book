@@ -37,7 +37,7 @@ void main() {
 
     expect(find.text(holeText), findsNothing);
 
-    await tester.tap(find.byIcon(Icons.lightbulb_outline));
+    await tester.tap(find.byIcon(Icons.info_outline));
     await tester.pumpAndSettle();
 
     expect(find.text(holeText), findsOneWidget);
@@ -58,7 +58,7 @@ void main() {
     await tester.pumpWidget(_wrap(locale, const HolePage(n: 1)));
     await tester.pumpAndSettle();
 
-    await tester.tap(find.byIcon(Icons.lightbulb_outline));
+    await tester.tap(find.byIcon(Icons.info_outline));
     await tester.pumpAndSettle();
 
     expect(find.text(holeTextEn), findsOneWidget);

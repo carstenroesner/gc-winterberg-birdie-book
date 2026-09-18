@@ -1,13 +1,14 @@
 // Einzelne Loch-Seite im Pager: Lochnummer, Par/HCP, echtes Bahnenfoto
 // (bereinigt/hochskaliert, siehe PFLICHTENHEFT.md Abschnitt 15),
-// Herren-/Damen-Distanz-Chips sowie ein Tipp-Button (Glühbirnen-Symbol,
-// seit 18.09.2026 statt des zuvor verwendeten (i)-Info-Icons – Nutzer-
-// Feedback: es handelt sich um einen Spieltipp, kein allgemeines Info-
-// Icon, siehe PFLICHTENHEFT.md Abschnitt 18), der den Charakteristik-Text
-// groß in einem Dialog anzeigt, in der aktuell gewählten Sprache (siehe
-// Hole.textFor). 1:1-Verhalten aus buildHolePage() in js/app.js –
-// physische Lochnummer n (1..18), vordere Neun = "front"-Seite, hintere
-// Neun (n>9) = "back"-Seite derselben Bahn.
+// Herren-/Damen-Distanz-Chips sowie ein Info-Button (outline-info-Icon,
+// seit 19.09.2026 wieder statt des zwischenzeitlich verwendeten
+// Glühbirnen-Symbols – Nutzer-Feedback: die Glühbirne wirkte optisch
+// unpassend, siehe PFLICHTENHEFT.md Abschnitt 20), der den
+// Charakteristik-Text groß in einem Dialog anzeigt, in der aktuell
+// gewählten Sprache (siehe Hole.textFor). 1:1-Verhalten aus
+// buildHolePage() in js/app.js – physische Lochnummer n (1..18),
+// vordere Neun = "front"-Seite, hintere Neun (n>9) = "back"-Seite
+// derselben Bahn.
 
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -77,7 +78,7 @@ class HolePage extends StatelessWidget {
                                   ?.copyWith(fontWeight: FontWeight.w700),
                             ),
                             IconButton(
-                              icon: const Icon(Icons.lightbulb_outline),
+                              icon: const Icon(Icons.info_outline),
                               color: GolfPalette.inkSoft,
                               tooltip: locale.t('holeInfo'),
                               onPressed: () => _showCharacteristicDialog(
